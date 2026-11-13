@@ -66,6 +66,9 @@ p { margin: 0 0 1em; }
 .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(12 4 4 / .45) 0%, rgb(12 4 4 / 0) 30%, rgb(12 4 4 / .1) 55%, rgb(12 4 4 / .92) 100%); }
 .hero__in { position: relative; z-index: 1; padding: 0 var(--pad) clamp(2rem, 6vw, 4.5rem); }
 .hero__logo { width: clamp(76px, 9vw, 120px); height: auto; margin-bottom: 1.25rem; }
+.hero__logo { animation: spin 18s linear infinite; transform-origin: 50% 50%; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .hero__logo { animation: none; } }
 .hero h1 { font-size: clamp(3.2rem, 11.5vw, 9.5rem); }
 .hero__tag { color: var(--ink); font-size: clamp(1.1rem, 2.2vw, 1.6rem); margin: .8rem 0 0; }
 
