@@ -27,13 +27,12 @@
   .mono { font: 11px/1.55 "Fragment Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
   .ln { display: inline-block; font: 11px/1 "Fragment Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); padding-bottom: 6px; border-bottom: 1px solid currentColor; }
   .ph { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 0; }
-  .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
+  
   /* page 1 */
   .p1 { display: grid; grid-template-columns: 640px 1fr; grid-template-rows: minmax(0, 1fr); }
-  .cover { position: relative; }
-  .cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(12 4 4/.1) 40%, rgb(12 4 4/.9)); }
-  .cover__in { position: absolute; left: 44px; right: 44px; bottom: 40px; z-index: 1; }
+  .cover { position: relative; display: flex; flex-direction: column; }
+  .cover > img { position: static; width: 640px; height: 360px; object-fit: cover; flex: none; }
+  .cover__in { padding: 34px 44px 0; }
   .cover__in img { width: 96px; height: auto; display: block; margin-bottom: 18px; }
   .cover__in .big { font-size: 78px; }
   .cover__in p { color: var(--ink); font-size: 19px; margin: 12px 0 0; }
@@ -94,7 +93,7 @@
 <!-- 1 · cover + band -->
 <section class="pg p1">
   <div class="cover">
-    <img src="{{ img }}lg/vientos-jardin.jpg" alt="" style="object-position:50% 30%">
+    <img src="{{ img }}lg/grupo-fila-2.jpg" alt="La Senyal">
     <div class="cover__in">
       <img src="{{ img }}logo.png" alt="">
       <h1 class="big">La Senyal</h1>
