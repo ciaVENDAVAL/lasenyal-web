@@ -7,11 +7,21 @@ PDFs (press kit) go in the sister repo **lasenyal-docs**.
 
 ## What's in it
 
-- **3 pages:** Home, Members, Concerts — in **CA** (`/ca/`, `/ca/equip/`, `/ca/concerts/`), **ES** (`/`, `/equipo/`, `/conciertos/`) and **EN** (`/en/`, `/en/members/`, `/en/concerts/`). ES stays at the root like the old site; the old `/inicio/` address redirects.
+- **4 pages:** Home, Members, Concerts, Hands (game) — in **CA** (`/ca/`, `/ca/equip/`, `/ca/concerts/`, `/ca/mans/`), **ES** (`/`, `/equipo/`, `/conciertos/`, `/manos/`) and **EN** (`/en/`, `/en/members/`, `/en/concerts/`, `/en/hands/`). ES stays at the root like the old site; the old `/inicio/` address redirects.
 - **Contact** sits small in the footer of every page, with the press kit in the visitor's language.
 - **Photos are local** (`assets/img/sm` = thumbnails, `assets/img/lg` = full size, `assets/img/members` = portraits). Click a photo on the home page to open it full size (arrows, keyboard ← →, swipe, Esc).
 - **Accessibility button** (bottom left, like the other ciaVENDAVAL sites): stop animations and video, high contrast, underline links, line spacing, easier font, text size. Choices are remembered per browser. The footer keeps a left margin so the button never covers its text.
 - **Press kit:** a hidden page at `/presskit/<lang>/`, printed to PDF by `scripts/presskit.py`.
+
+## The hands game (Mans / Manos / Hands)
+
+Two hands, thumbs outward; each finger is an eighth note (finger up = trumpet plays). Six rhythms, tempo, clave 3-2/2-3, articulation per hand.
+**Record** starts at the next bar and keeps what the hands play (up to 32 bars); **Play recording** replays it with the hands moving.
+The current hands, rhythm and tempo are kept in the page address, so **Copy link** shares a groove.
+
+- Code: `assets/js/mans.js` (rhythms are in the `RHYTHMS` object at the top). Page: `_layouts/hands.html`. Texts: `mans:` in the language files.
+- Sound is synthesized in the browser (no files). Levels were checked by rendering offline: open the page with `?mans-test` and run `__mansRender("salsa", 4)` in the console.
+- Based on "Mans — VENDAVAL" v3.
 
 ## Add a concert
 

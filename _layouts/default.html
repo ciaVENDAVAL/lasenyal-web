@@ -40,7 +40,7 @@
     </a>
     <div class="top__links">
       <nav class="nav" aria-label="{{ t.menu }}">
-        {%- assign navkeys = "members,concerts" | split: "," -%}
+        {%- assign navkeys = "members,concerts,hands" | split: "," -%}
         {%- for k in navkeys %}
         <a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a>
         {%- endfor %}
@@ -58,7 +58,7 @@
     <div class="menu" id="menu" hidden>
       <nav aria-label="{{ t.menu }}">
         <ol class="menu__list">
-          {%- assign navkeys = "home,members,concerts" | split: "," -%}
+          {%- assign navkeys = "home,members,concerts,hands" | split: "," -%}
           {%- for k in navkeys %}
           <li><a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a></li>
           {%- endfor %}

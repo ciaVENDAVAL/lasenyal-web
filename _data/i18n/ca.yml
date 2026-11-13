@@ -5,6 +5,7 @@ nav:
   home: Inici
   members: Equip
   concerts: Concerts
+  hands: Mans
 
 tagline: "Improvisació en temps real, dirigida amb signes."
 
@@ -87,3 +88,64 @@ a11y:
 
 menu: "Menú"
 close_menu: "Tanca el menú"
+
+# Hands game (Mans)
+mans:
+  home_label: "Juga"
+  home_title: "Dirigeix amb les mans"
+  home_text: "Un petit joc: cada dit és una nota. Aixeca i plega els dits sobre un ritme de salsa, cúmbia o balkan, i grava el que inventis."
+  home_btn: "Juga"
+  title: "Mans"
+  intro: "A La Senyal la música es fa amb les mans: qui dirigeix fa un senyal i la banda respon. Aquí dirigeixen les teves dues mans."
+  how: "Cada dit és una corxera: quatre dits per mà, vuit corxeres, un compàs. Dit aixecat = sona la trompeta; dit plegat = silenci. Toca els dits, tria un ritme i grava la teva frase."
+  play: "Reproduir"
+  stop: "Aturar"
+  rhythm: "Ritme"
+  tempo: "Tempo"
+  clave32: "Clau 3-2"
+  clave23: "Clau 2-3"
+  drums: "Bateria"
+  trumpet: "Trompeta"
+  clear: "Esborrar"
+  rec: "Gravar"
+  rec_stop: "Atura la gravació"
+  take: "Escolta la gravació"
+  take_stop: "Atura"
+  share: "Copia l'enllaç"
+  copied: "Enllaç copiat"
+  left: "Mà esquerra · temps 1–2"
+  right: "Mà dreta · temps 3–4"
+  left_short: "Mà esquerra"
+  right_short: "Mà dreta"
+  art_normal: "Neutre"
+  art_sustain: "Sostingut"
+  art_staccato: "Staccato"
+  groove: "Base"
+  hint: "Espai: reproduir / aturar. Les mans i el ritme queden a l'enllaç, per compartir-los."
+  st_none: "Encara no hi ha gravació."
+  st_armed: "La gravació comença al proper compàs…"
+  st_rec: "Gravant · compàs {n}"
+  st_have: "Gravació: {n} compassos"
+  st_take: "Escoltant la gravació · compàs {i} de {n}"
+  finger: "Dit {n}"
+  on: "sona"
+  off: "silenci"
+  hands_label: "Les mans · 8 corxeres, d'esquerra a dreta"
+  lanes:
+    clave: "Clau"
+    cowbell: "Campana"
+    conga: "Conga"
+    maracas: "Maraques"
+    bongo: "Bongó"
+    kick: "Bombo"
+    guacharaca: "Guacharaca"
+    dum: "Dum"
+    tek: "Tek"
+    pulse: "Pols"
+    cajon_low: "Cajón greu"
+    cajon_high: "Cajón agut"
+    palmas: "Palmes"
+    snare: "Caixa"
+    hihat: "Hi-hat"
+  rhythms:
+    cumbia: "Cúmbia"

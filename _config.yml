@@ -17,17 +17,17 @@ languages:
     label: CA
     name: Català
     locale: ca_ES
-    pages: { home: /ca/, members: /ca/equip/, concerts: /ca/concerts/ }
+    pages: { home: /ca/, members: /ca/equip/, concerts: /ca/concerts/, hands: /ca/mans/ }
   - code: es
     label: ES
     name: Castellano
     locale: es_ES
-    pages: { home: /, members: /equipo/, concerts: /conciertos/ }
+    pages: { home: /, members: /equipo/, concerts: /conciertos/, hands: /manos/ }
   - code: en
     label: EN
     name: English
     locale: en_GB
-    pages: { home: /en/, members: /en/members/, concerts: /en/concerts/ }
+    pages: { home: /en/, members: /en/members/, concerts: /en/concerts/, hands: /en/hands/ }
 
 contact:
   email: lasenyalbcn@gmail.com

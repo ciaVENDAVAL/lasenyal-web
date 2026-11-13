@@ -5,6 +5,7 @@ nav:
   home: Home
   members: Members
   concerts: Concerts
+  hands: Hands
 
 tagline: "Real-time improvisation, conducted with hand signs."
 
@@ -87,3 +88,63 @@ a11y:
 
 menu: "Menu"
 close_menu: "Close menu"
+
+# Hands game (Mans)
+mans:
+  home_label: "Play"
+  home_title: "Conduct with your hands"
+  home_text: "A small game: each finger is a note. Raise and fold your fingers over a salsa, cumbia or Balkan groove, and record what you come up with."
+  home_btn: "Play"
+  title: "Hands"
+  intro: "At La Senyal, music is made with hands: the conductor makes a sign and the band answers. Here, your two hands conduct."
+  how: "Each finger is an eighth note: four fingers per hand, eight eighths, one bar. Finger up = the trumpet plays; finger folded = rest. Tap the fingers, pick a rhythm and record your phrase."
+  play: "Play"
+  stop: "Stop"
+  rhythm: "Rhythm"
+  tempo: "Tempo"
+  clave32: "Clave 3-2"
+  clave23: "Clave 2-3"
+  drums: "Drums"
+  trumpet: "Trumpet"
+  clear: "Clear"
+  rec: "Record"
+  rec_stop: "Stop recording"
+  take: "Play recording"
+  take_stop: "Stop"
+  share: "Copy link"
+  copied: "Link copied"
+  left: "Left hand · beats 1–2"
+  right: "Right hand · beats 3–4"
+  left_short: "Left hand"
+  right_short: "Right hand"
+  art_normal: "Neutral"
+  art_sustain: "Sustain"
+  art_staccato: "Staccato"
+  groove: "Groove"
+  hint: "Space: play / stop. Your hands and rhythm are saved in the link, so you can share them."
+  st_none: "No recording yet."
+  st_armed: "Recording starts at the next bar…"
+  st_rec: "Recording · bar {n}"
+  st_have: "Recording: {n} bars"
+  st_take: "Playing recording · bar {i} of {n}"
+  finger: "Finger {n}"
+  on: "plays"
+  off: "rest"
+  hands_label: "The hands · 8 eighth notes, left to right"
+  lanes:
+    clave: "Clave"
+    cowbell: "Cowbell"
+    conga: "Conga"
+    maracas: "Maracas"
+    bongo: "Bongo"
+    kick: "Kick"
+    guacharaca: "Guacharaca"
+    dum: "Dum"
+    tek: "Tek"
+    pulse: "Pulse"
+    cajon_low: "Cajón low"
+    cajon_high: "Cajón high"
+    palmas: "Claps"
+    snare: "Snare"
+    hihat: "Hi-hat"
+  rhythms: {}

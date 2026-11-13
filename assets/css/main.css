@@ -46,8 +46,8 @@ p { margin: 0 0 1em; }
    and a box with 3 lines appears in their place (opens the pink menu panel). */
 .top { position: fixed; inset: 0 0 auto; z-index: 50; display: flex; align-items: center; gap: 1rem; padding: 1rem var(--pad); pointer-events: none; }
 .top > * { pointer-events: auto; }
-.p-members main, .p-concerts main { padding-top: 78px; }
-.p-members .top::before, .p-concerts .top::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--bg); border-bottom: 1px solid var(--line); transition: opacity .4s; }
+.p-members main, .p-concerts main, .p-hands main { padding-top: 78px; }
+.p-members .top::before, .p-concerts .top::before, .p-hands .top::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--bg); border-bottom: 1px solid var(--line); transition: opacity .4s; }
 .brand { display: flex; align-items: center; gap: .6rem; color: var(--ink); text-decoration: none; font: 900 .95rem/1 var(--display); font-stretch: 125%; text-transform: uppercase; white-space: nowrap; transition: opacity .4s, transform .4s; }
 .brand img { width: 40px; height: 40px; }
 .p-home .brand span { display: none; }
@@ -102,16 +102,29 @@ html.is-scrolled .menu-btn { opacity: 1; visibility: visible; transform: none; t
 .menu__foot a { text-decoration: underline; text-underline-offset: .2em; }
 .top .menu :focus-visible { outline-color: var(--bg); }
 
-/* small phones: keep everything on one line */
-@media (max-width: 480px) {
-  .top { gap: .6rem; }
+/* touch screens: bigger targets (at least 44px) */
+@media (pointer: coarse) {
+  .nav a, .langs a { display: inline-grid; place-items: center; min-height: 44px; min-width: 44px; padding: 0 .55rem; font-size: .85rem; }
+  .nav { gap: .3rem; }
+}
+
+/* phones: logo + languages on the first row, the pages as three wide buttons on the second */
+@media (max-width: 640px) {
+  .top { flex-wrap: wrap; row-gap: .55rem; padding-top: .75rem; padding-bottom: .75rem; }
   .brand span { display: none; }
-  .brand img { width: 34px; height: 34px; }
-  .top__links { gap: .6rem; }
-  .nav { gap: .7rem; }
-  .nav a, .langs a { font-size: .7rem; letter-spacing: .02em; }
-  .langs { padding-left: .45rem; }
-  .langs a { padding: .35rem .2rem; }
+  .top__links { display: contents; }
+  .langs { order: 2; margin-left: auto; border: 0; padding: 0; gap: .3rem; }
+  .langs a { display: grid; place-items: center; min-width: 44px; min-height: 44px; padding: 0; font-size: .85rem; letter-spacing: .04em;
+    border: 1px solid rgb(240 237 235 / .3); background: rgb(12 4 4 / .45); color: var(--ink); }
+  .langs a[aria-current] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .nav { order: 3; flex: 1 0 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem; }
+  .nav a { display: grid; place-items: center; min-height: 48px; padding: 0 .3rem; font-size: .8rem; letter-spacing: .04em; text-align: center;
+    border: 1px solid rgb(240 237 235 / .3); background: rgb(12 4 4 / .45); }
+  .nav a[aria-current] { background: var(--pink); border-color: var(--pink); color: var(--bg); }
+  .nav, .langs, .brand { transition: transform .5s cubic-bezier(.2, .7, .2, 1), opacity .4s, visibility 0s; }
+  html.is-scrolled .nav, html.is-scrolled .langs { transform: translateX(60px); opacity: 0; visibility: hidden; transition: transform .5s cubic-bezier(.4, 0, .6, 1), opacity .35s, visibility 0s .5s; }
+  .p-members main, .p-concerts main, .p-hands main { padding-top: 136px; }
+  .menu-btn { top: .75rem; }
 }
 
 /* ── hero ─────────────────────────────── */
@@ -297,3 +310,90 @@ html.a11y-spacing p { margin-bottom: 1.4em; }
 html.a11y-font { --display: Verdana, Arial, sans-serif; --body: Verdana, Arial, sans-serif; --mono: Verdana, Arial, sans-serif; }
 html.a11y-font .display, html.a11y-font h1, html.a11y-font .how h2, html.a11y-font .next h2, html.a11y-font .block__t, html.a11y-font .card__t, html.a11y-font .gig__day, html.a11y-font .brand, html.a11y-font .res__txt h3, html.a11y-font .a11y-title { font-weight: 700; letter-spacing: 0; }
 html.a11y-font .label, html.a11y-font .mono { letter-spacing: .02em; }
+
+/* ── Mans / Manos / Hands (game) ─────────
+   Pink = what is playing now, ink = notes on, green = drum accents. */
+.mans__how { max-width: 40em; margin-top: 1rem; }
+.mans { padding-bottom: clamp(3rem, 7vw, 5rem); }
+.mans__bar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: .75rem; }
+.mans__bar--set { margin-bottom: 2.25rem; padding-top: .75rem; border-top: 1px solid var(--line); }
+.mans__status { margin: 0 0 0 .5rem; font: .75rem/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.mb { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: 0 1rem; border: 1px solid var(--line); background: var(--bg-2); color: var(--ink);
+  font: .75rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
+.mb:hover:not(:disabled) { border-color: var(--pink); }
+.mb:disabled { opacity: .4; cursor: default; }
+.mb__i { font-size: .9rem; }
+.mb--play { background: var(--pink); border-color: var(--pink); color: var(--bg); min-width: 9.5rem; }
+.mb--play:hover { background: var(--ink); border-color: var(--ink); }
+.mb--play.on { background: var(--ink); border-color: var(--ink); }
+.mb--rec .mb__i { color: #ff4d4d; }
+.mb--rec.on { background: #ff4d4d; border-color: #ff4d4d; color: var(--bg); }
+.mb--rec.on .mb__i { color: var(--bg); animation: mans-blink 1s steps(2) infinite; }
+@keyframes mans-blink { 50% { opacity: .2; } }
+[data-act="take"].on { background: var(--green); border-color: var(--green); }
+.mb--tog[aria-pressed="false"] { color: var(--muted); text-decoration: line-through; }
+.mb--tog[aria-pressed="true"] { border-color: var(--ink); }
+.mf { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; padding: 0 .8rem; border: 1px solid var(--line); background: var(--bg-2); }
+.mf[hidden] { display: none; }
+.mf > span { font: .7rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mf select { background: transparent; color: var(--ink); border: 0; font: 1rem var(--body); padding: .4rem 0; cursor: pointer; }
+.mf select option { background: var(--bg-2); color: var(--ink); }
+.mf--tempo { flex: 1 1 240px; }
+.mf--tempo input { flex: 1; accent-color: var(--pink); min-width: 90px; }
+.mf--tempo output { font: .8rem var(--mono); min-width: 5.5em; text-align: right; color: var(--ink); }
+
+.mans__hands { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; max-width: 720px; margin: 0 auto 2.25rem; }
+.slot { background: var(--bg-2); border: 1px solid var(--line); padding: .9rem .6rem .7rem; transition: border-color .1s, background .1s; }
+.slot.cur { border-color: var(--pink); }
+.slot .cap { font: .68rem/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: .3rem; }
+.slot svg { display: block; width: 100%; max-width: 280px; margin: 0 auto; height: auto; -webkit-tap-highlight-color: transparent; overflow: visible; }
+.slot g[data-f] { cursor: pointer; outline: none; }
+.slot g[data-f]:focus-visible .fing { stroke: var(--pink); stroke-width: 2; }
+.slot g.dis { opacity: .2; pointer-events: none; }
+.fing { fill: #4a3c3a; transition: fill .1s, y .15s, height .15s; }
+.on .fing { fill: #e9ddd6; }
+.palm { fill: #2c2220; }
+.thumb { fill: #3a2e2c; }
+.knuckles { stroke: rgb(240 237 235 / .12); stroke-width: 1; }
+.staffl { stroke: rgb(240 237 235 / .18); stroke-width: .8; }
+.nh { fill: var(--ink); }
+.stem, .flag, .rest { stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.rest { stroke: rgb(240 237 235 / .4); }
+.playing .fing, .playing .nh { fill: var(--pink); }
+.playing .stem, .playing .flag { stroke: var(--pink); }
+.playing:not(.on) .fing { fill: #6a3f55; }
+.art { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .3rem; margin-top: .6rem; }
+.art button { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-height: 40px; padding: 0 .2rem; border: 1px solid var(--line); background: transparent; color: var(--muted); font: .68rem var(--mono); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+.art button:hover { border-color: var(--pink); }
+.art button.sel { border-color: var(--pink); color: var(--pink); }
+.mans.is-take .slot { cursor: default; }
+.mans.is-take .slot g[data-f], .mans.is-take .art button { pointer-events: none; }
+.mans.is-take .slot { border-color: var(--green); }
+.mans.is-take .slot.cur { border-color: var(--pink); }
+
+.lane { display: grid; gap: 3px; align-items: center; margin-bottom: 5px; }
+.lane .rn { font: .66rem var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cell { height: 18px; background: var(--bg-2); border: 1px solid rgb(240 237 235 / .06); }
+.cell.hit { background: rgb(240 237 235 / .3); }
+.cell.hit.acc { background: #1f9a57; }
+.cell.cur { border-color: var(--pink); }
+.cell.hit.cur { background: var(--pink); }
+.cell.g { margin-left: 4px; }
+.mans__hint { font: .72rem/1.6 var(--mono); color: var(--muted); margin-top: 1.5rem; }
+@media (max-width: 560px) {
+  .mans__hands { gap: .4rem; }
+  .slot { padding: .7rem .35rem .5rem; }
+  .art { grid-template-columns: 1fr; }
+  .art button { font-size: .66rem; min-height: 36px; }
+  .mans__status { flex-basis: 100%; margin: .25rem 0 0; }
+  .mb--play { min-width: 0; }
+}
+
+/* home: the game section (last before contact) */
+.play-teaser { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; padding-block: 0 clamp(4rem, 9vw, 7rem); }
+.play-teaser h2 { font: 900 clamp(1.9rem, 4.2vw, 3.4rem)/.92 var(--display); font-stretch: 125%; text-transform: uppercase; letter-spacing: -.02em; margin-bottom: 1.2rem; }
+.play-teaser p:not(.label) { max-width: 30em; margin-bottom: 1.5rem; }
+.play-teaser__art { display: block; background: var(--bg-2); border: 1px solid var(--line); padding: 1.2rem; transition: border-color .2s; }
+.play-teaser__art:hover { border-color: var(--pink); }
+.play-teaser__art svg { display: block; width: 100%; height: auto; }
+@media (max-width: 860px) { .play-teaser { grid-template-columns: 1fr; } }

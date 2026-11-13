@@ -5,6 +5,7 @@ nav:
   home: Inicio
   members: Equipo
   concerts: Conciertos
+  hands: Manos
 
 tagline: "Improvisación en tiempo real, dirigida con señas."
 
@@ -87,3 +88,63 @@ a11y:
 
 menu: "Menú"
 close_menu: "Cerrar menú"
+
+# Hands game (Mans)
+mans:
+  home_label: "Juega"
+  home_title: "Dirige con tus manos"
+  home_text: "Un pequeño juego: cada dedo es una nota. Levanta y dobla los dedos sobre un ritmo de salsa, cumbia o balkan, y graba lo que inventes."
+  home_btn: "Jugar"
+  title: "Manos"
+  intro: "En La Senyal la música se hace con las manos: quien dirige hace una seña y la banda responde. Aquí dirigen tus dos manos."
+  how: "Cada dedo es una corchea: cuatro dedos por mano, ocho corcheas, un compás. Dedo levantado = suena la trompeta; dedo doblado = silencio. Toca los dedos, elige un ritmo y graba tu frase."
+  play: "Reproducir"
+  stop: "Parar"
+  rhythm: "Ritmo"
+  tempo: "Tempo"
+  clave32: "Clave 3-2"
+  clave23: "Clave 2-3"
+  drums: "Batería"
+  trumpet: "Trompeta"
+  clear: "Borrar"
+  rec: "Grabar"
+  rec_stop: "Parar la grabación"
+  take: "Escuchar la grabación"
+  take_stop: "Parar"
+  share: "Copiar enlace"
+  copied: "Enlace copiado"
+  left: "Mano izquierda · tiempos 1–2"
+  right: "Mano derecha · tiempos 3–4"
+  left_short: "Mano izquierda"
+  right_short: "Mano derecha"
+  art_normal: "Neutro"
+  art_sustain: "Sostenido"
+  art_staccato: "Staccato"
+  groove: "Base"
+  hint: "Espacio: reproducir / parar. Las manos y el ritmo quedan en el enlace, para compartirlos."
+  st_none: "Todavía no hay grabación."
+  st_armed: "La grabación empieza en el próximo compás…"
+  st_rec: "Grabando · compás {n}"
+  st_have: "Grabación: {n} compases"
+  st_take: "Escuchando la grabación · compás {i} de {n}"
+  finger: "Dedo {n}"
+  on: "suena"
+  off: "silencio"
+  hands_label: "Las manos · 8 corcheas, de izquierda a derecha"
+  lanes:
+    clave: "Clave"
+    cowbell: "Campana"
+    conga: "Conga"
+    maracas: "Maracas"
+    bongo: "Bongó"
+    kick: "Bombo"
+    guacharaca: "Guacharaca"
+    dum: "Dum"
+    tek: "Tek"
+    pulse: "Pulso"
+    cajon_low: "Cajón grave"
+    cajon_high: "Cajón agudo"
+    palmas: "Palmas"
+    snare: "Caja"
+    hihat: "Hi-hat"
+  rhythms: {}

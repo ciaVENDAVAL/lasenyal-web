@@ -88,3 +88,13 @@ layout: default
     <span class="card__t">{{ t.see_members }} →</span>
   </a>
 </section>
+
+<section class="wrap play-teaser" aria-labelledby="play-title">
+  <div>
+    <p class="label">/ {{ t.mans.home_label }} /</p>
+    <h2 id="play-title">{{ t.mans.home_title }}</h2>
+    <p>{{ t.mans.home_text }}</p>
+    <a class="btn" href="{{ L.pages.hands | relative_url }}">{{ t.mans.home_btn }} →</a>
+  </div>
+  <a class="play-teaser__art" href="{{ L.pages.hands | relative_url }}" tabindex="-1" aria-hidden="true">{% include hands-preview.svg %}</a>
+</section>

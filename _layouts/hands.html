@@ -1,0 +1,40 @@
+---
+layout: default
+---
+{%- assign t = site.data.i18n[page.lang] -%}
+{%- assign m = t.mans -%}
+<section class="wrap head">
+  <p class="label">/ La Senyal /</p>
+  <h1>{{ m.title }}</h1>
+  <p class="head__intro">{{ m.intro }}</p>
+  <p class="mans__how">{{ m.how }}</p>
+</section>
+
+<section class="wrap mans" id="mans" aria-label="{{ m.title }}">
+  <div class="mans__bar">
+    <button type="button" class="mb mb--play" data-act="play" aria-pressed="false"><span class="mb__i" aria-hidden="true">▶</span><span class="mb__t">{{ m.play }}</span></button>
+    <button type="button" class="mb mb--rec" data-act="rec" aria-pressed="false"><span class="mb__i" aria-hidden="true">●</span><span class="mb__t">{{ m.rec }}</span></button>
+    <button type="button" class="mb" data-act="take" aria-pressed="false" disabled><span class="mb__i" aria-hidden="true">▷</span><span class="mb__t">{{ m.take }}</span></button>
+    <p class="mans__status" role="status" aria-live="polite">{{ m.st_none }}</p>
+  </div>
+
+  <div class="mans__bar mans__bar--set">
+    <label class="mf"><span>{{ m.rhythm }}</span><select data-ctl="rhythm"></select></label>
+    <label class="mf mf--tempo"><span>{{ m.tempo }}</span><input data-ctl="tempo" type="range" min="60" max="240" step="1" value="160"><output data-ctl="tempoOut">160 BPM</output></label>
+    <label class="mf" data-ctl="claveWrap"><span class="sr">Clave</span><select data-ctl="clave"><option value="32">{{ m.clave32 }}</option><option value="23">{{ m.clave23 }}</option></select></label>
+    <button type="button" class="mb mb--tog" data-act="drums" aria-pressed="true">{{ m.drums }}</button>
+    <button type="button" class="mb mb--tog" data-act="trumpet" aria-pressed="true">{{ m.trumpet }}</button>
+    <button type="button" class="mb" data-act="clear">{{ m.clear }}</button>
+    <button type="button" class="mb" data-act="share">{{ m.share }}</button>
+  </div>
+
+  <p class="label">{{ m.hands_label }}</p>
+  <div class="mans__hands" data-ctl="slots"></div>
+
+  <p class="label" data-ctl="laneLabel">{{ m.groove }}</p>
+  <div class="mans__lanes" data-ctl="lanes"></div>
+
+  <p class="mans__hint">{{ m.hint }}</p>
+  <script type="application/json" class="mans__t">{{ m | jsonify }}</script>
+</section>
+<script src="{{ '/assets/js/mans.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
