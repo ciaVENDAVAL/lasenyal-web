@@ -10,6 +10,7 @@ PDFs (press kit) go in the sister repo **lasenyal-docs**.
 - **3 pages:** Home, Members, Concerts — in **CA** (`/ca/`, `/ca/equip/`, `/ca/concerts/`), **ES** (`/`, `/equipo/`, `/conciertos/`) and **EN** (`/en/`, `/en/members/`, `/en/concerts/`). ES stays at the root like the old site; the old `/inicio/` address redirects.
 - **Contact** sits small in the footer of every page, with the press kit in the visitor's language.
 - **Photos are local** (`assets/img/sm` = thumbnails, `assets/img/lg` = full size, `assets/img/members` = portraits). Click a photo on the home page to open it full size (arrows, keyboard ← →, swipe, Esc).
+- **Accessibility button** (bottom left, like the other ciaVENDAVAL sites): stop animations and video, high contrast, underline links, line spacing, easier font, text size. Choices are remembered per browser. The footer keeps a left margin so the button never covers its text.
 - **Press kit:** a hidden page at `/presskit/<lang>/`, printed to PDF by `scripts/presskit.py`.
 
 ## Add a concert
@@ -40,6 +41,7 @@ Commit. In a minute it shows under **Upcoming** on the home page (next 3) and on
 | Email, phones, Instagram, video, page addresses | `_config.yml` |
 | Look & feel | `assets/css/main.css` (colours and fonts at the top) |
 | Press kit layout | `_layouts/presskit.html` |
+| Accessibility panel | `_includes/a11y.html`, texts under `a11y:` in the language files |
 
 **Add photos:** save a thumbnail (about 820 px on the long side) in `assets/img/sm/` and a large version (about 1800 px) with the **same name** in `assets/img/lg/`.
 

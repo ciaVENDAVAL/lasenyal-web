@@ -28,6 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800;125,900&family=Fragment+Mono&family=Questrial&display=swap">
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <script>try{var a=JSON.parse(localStorage.getItem("ls-a11y")||"{}"),h=document.documentElement;Object.keys(a).forEach(function(k){if(k==="size")h.style.setProperty("--fs",a[k]);else if(a[k])h.classList.add("a11y-"+k)})}catch(e){}</script>
 </head>
 <body class="p-{{ page.ref }}">
   <a class="skip" href="#main">{{ t.skip }}</a>
@@ -69,6 +70,8 @@
     </div>
     <p class="foot__meta">La Senyal · Barcelona · {{ site.time | date: "%Y" }}</p>
   </footer>
+
+  {% include a11y.html %}
 
   <div class="lb" id="lb" hidden role="dialog" aria-modal="true">
     <button class="lb__x" type="button" aria-label="{{ t.close }}">×</button>

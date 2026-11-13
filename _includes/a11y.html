@@ -1,0 +1,20 @@
+{%- comment -%} Accessibility button + panel (same as the other ciaVENDAVAL sites). Needs t. {%- endcomment -%}
+<div class="a11y">
+  <button type="button" class="a11y-btn" aria-expanded="false" aria-controls="a11y-panel" aria-label="{{ t.a11y.title }}" title="{{ t.a11y.title }}">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.2" r="2.1"/><path d="M20.5 8.6c0 .6-.4 1-1 1.1l-4.7.7v4.1l1.7 6.4a1 1 0 0 1-1.9.6L12.9 16h-1.8l-1.7 5.5a1 1 0 0 1-1.9-.6l1.7-6.4v-4.1l-4.7-.7a1.1 1.1 0 0 1 .3-2.2l5 .6h4.4l5-.6c.7-.1 1.3.4 1.3 1.1z"/></svg>
+  </button>
+  <div id="a11y-panel" class="a11y-panel" role="group" aria-label="{{ t.a11y.title }}" hidden>
+    <p class="a11y-title">{{ t.a11y.title }}</p>
+    <button type="button" data-a="motion" aria-pressed="false"><span aria-hidden="true">⏸</span>{{ t.a11y.motion }}</button>
+    <button type="button" data-a="contrast" aria-pressed="false"><span aria-hidden="true">◐</span>{{ t.a11y.contrast }}</button>
+    <button type="button" data-a="links" aria-pressed="false"><span aria-hidden="true">⎁</span>{{ t.a11y.links }}</button>
+    <button type="button" data-a="spacing" aria-pressed="false"><span aria-hidden="true">↕</span>{{ t.a11y.spacing }}</button>
+    <button type="button" data-a="font" aria-pressed="false"><span aria-hidden="true">Aa</span>{{ t.a11y.font }}</button>
+    <div class="a11y-size">
+      <button type="button" data-a="smaller" aria-label="{{ t.a11y.smaller }}">A−</button>
+      <span>{{ t.a11y.size }} <output class="a11y-size__val">100%</output></span>
+      <button type="button" data-a="bigger" aria-label="{{ t.a11y.bigger }}">A+</button>
+    </div>
+    <button type="button" data-a="reset" class="a11y-reset"><span aria-hidden="true">↺</span>{{ t.a11y.reset }}</button>
+  </div>
+</div>

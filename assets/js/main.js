@@ -21,8 +21,9 @@
 
   // 2. Video after the hero: plays muted in the page (tap to unmute).
   //    If YouTube refuses to play it here, the photo with a link to YouTube stays instead.
+  const stopped = () => document.documentElement.classList.contains("a11y-motion");
   const vid = document.querySelector(".video[data-yt]");
-  if (vid) {
+  if (vid && !stopped()) {
     const id = vid.dataset.yt;
     const start = () => {
       const holder = document.createElement("div");
@@ -31,9 +32,9 @@
         const player = new YT.Player(holder, {
           videoId: id,
           host: "https://www.youtube-nocookie.com",
-          playerVars: { autoplay: 1, mute: 1, loop: 1, playlist: id, playsinline: 1, rel: 0, modestbranding: 1 },
+          playerVars: { autoplay: stopped() ? 0 : 1, mute: 1, loop: 1, playlist: id, playsinline: 1, rel: 0, modestbranding: 1 },
           events: {
-            onReady: e => { e.target.mute(); e.target.playVideo(); },
+            onReady: e => { e.target.mute(); if (!stopped()) e.target.playVideo(); },
             onStateChange: e => { if (e.data === 1) vid.classList.add("is-playing"); },
             onError: () => { vid.classList.remove("is-playing"); player.destroy(); },
           },
@@ -49,7 +50,38 @@
     } else start();
   }
 
-  // 3. Lightbox for photos (home strip + intro photo).
+  // 3. Accessibility panel (choices are remembered in this browser).
+  const KEY = "ls-a11y", root = document.documentElement;
+  const prefs = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (e) {} };
+  const TOGGLES = ["motion", "contrast", "links", "spacing", "font"];
+  const aBtn = document.querySelector(".a11y-btn"), panel = document.getElementById("a11y-panel");
+  const apply = () => {
+    TOGGLES.forEach(k => root.classList.toggle("a11y-" + k, !!prefs[k]));
+    root.style.setProperty("--fs", prefs.size || 1);
+    if (!panel) return;
+    panel.querySelectorAll("[data-a]").forEach(b => { if (TOGGLES.includes(b.dataset.a)) b.setAttribute("aria-pressed", String(!!prefs[b.dataset.a])); });
+    panel.querySelector(".a11y-size__val").textContent = Math.round((prefs.size || 1) * 100) + "%";
+    if (prefs.motion && vid) { const f = vid.querySelector("iframe"); if (f) f.remove(); vid.classList.remove("is-playing"); }
+  };
+  if (aBtn && panel) {
+    const setOpen = open => { aBtn.setAttribute("aria-expanded", String(open)); panel.hidden = !open; };
+    aBtn.addEventListener("click", () => { const open = panel.hidden; setOpen(open); if (open) panel.querySelector("button").focus(); });
+    panel.addEventListener("click", e => {
+      const b = e.target.closest("[data-a]"); if (!b) return;
+      const k = b.dataset.a;
+      if (TOGGLES.includes(k)) prefs[k] = !prefs[k];
+      else if (k === "bigger") prefs.size = Math.min(1.6, Math.round(((prefs.size || 1) + .1) * 10) / 10);
+      else if (k === "smaller") prefs.size = Math.max(.8, Math.round(((prefs.size || 1) - .1) * 10) / 10);
+      else if (k === "reset") Object.keys(prefs).forEach(x => delete prefs[x]);
+      save(); apply();
+    });
+    document.addEventListener("click", e => { if (!panel.hidden && !e.target.closest(".a11y")) setOpen(false); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && !panel.hidden) { setOpen(false); aBtn.focus(); } });
+  }
+  apply();
+
+  // 4. Lightbox for photos (home strip + intro photo).
   const lb = document.getElementById("lb");
   if (!lb) return;
   const big = lb.querySelector("img");
