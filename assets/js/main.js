@@ -19,7 +19,37 @@
     if (none) none.hidden = up.children.length > 0;
   }
 
-  // 2. Lightbox for photos (home strip + intro photo).
+  // 2. Video after the hero: plays muted in the page (tap to unmute).
+  //    If YouTube refuses to play it here, the photo with a link to YouTube stays instead.
+  const vid = document.querySelector(".video[data-yt]");
+  if (vid) {
+    const id = vid.dataset.yt;
+    const start = () => {
+      const holder = document.createElement("div");
+      vid.appendChild(holder);
+      window.onYouTubeIframeAPIReady = () => {
+        const player = new YT.Player(holder, {
+          videoId: id,
+          host: "https://www.youtube-nocookie.com",
+          playerVars: { autoplay: 1, mute: 1, loop: 1, playlist: id, playsinline: 1, rel: 0, modestbranding: 1 },
+          events: {
+            onReady: e => { e.target.mute(); e.target.playVideo(); },
+            onStateChange: e => { if (e.data === 1) vid.classList.add("is-playing"); },
+            onError: () => { vid.classList.remove("is-playing"); player.destroy(); },
+          },
+        });
+      };
+      const s = document.createElement("script");
+      s.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(s);
+    };
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: "300px" });
+      io.observe(vid);
+    } else start();
+  }
+
+  // 3. Lightbox for photos (home strip + intro photo).
   const lb = document.getElementById("lb");
   if (!lb) return;
   const big = lb.querySelector("img");
