@@ -44,6 +44,7 @@
         {%- for k in navkeys %}
         <a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a>
         {%- endfor %}
+        <a class="nav__contact" href="#contact">{{ t.contact }}</a>
       </nav>
       <nav class="langs" aria-label="{{ t.lang_label }}">
         {%- for l in site.languages %}
@@ -62,6 +63,7 @@
           {%- for k in navkeys %}
           <li><a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a></li>
           {%- endfor %}
+          <li><a href="#contact">{{ t.contact }}</a></li>
         </ol>
       </nav>
       <div class="menu__langs" role="group" aria-label="{{ t.lang_label }}">

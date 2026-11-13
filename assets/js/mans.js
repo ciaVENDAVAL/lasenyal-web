@@ -1,6 +1,6 @@
 // Mans / Manos / Hands — a hand-rhythm game for La Senyal.
-// Based on "Mans — VENDAVAL" v3. Two hands, thumbs outward; each finger = one eighth note.
-// Finger up = the trumpet plays, folded = rest. Everything is scoped to #mans; no storage,
+// Based on "Mans — VENDAVAL" v3. Two pairs of hands, thumbs outward; each finger = one eighth note.
+// Finger up = that hand's instrument plays, folded = rest. Both pairs play the same bar together. Everything is scoped to #mans; no storage,
 // no network. The current groove lives in the URL hash so it can be shared.
 (() => {
   "use strict";
@@ -11,7 +11,11 @@
   const btn = act => root.querySelector(`[data-act="${act}"]`);
   const fmt = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
-  const PITCH = 466.16; // one tone only: Bb4, trumpet
+  // one fixed note per instrument; together they make a Bb major chord
+  const INST = { trumpet: 466.16 /* Bb4 */, sax: 349.23 /* F4 */, djembe: 0, voice: 293.66 /* D4 */ };
+  const INST_KEYS = ["trumpet", "sax", "djembe", "voice"];
+  const INST_CODE = { trumpet: "t", sax: "x", djembe: "d", voice: "v" };
+  const CODE_INST = { t: "trumpet", x: "sax", d: "djembe", v: "voice" };
   const MAX_BARS = 32;  // longest recording
 
   /* ---------- rhythms ----------
@@ -46,15 +50,18 @@
   const rName = k => (T.rhythms && T.rhythms[k]) || RHYTHMS[k].name;
 
   /* ---------- state ---------- */
-  // pattern[0] = left hand, pattern[1] = right hand; fingers in on-screen order (left to right).
-  let pattern = [{ fingers: [1, 0, 1, 1], art: "normal" }, { fingers: [0, 1, 1, 0], art: "normal" }];
+  // pattern[0..1] = first pair (left, right), pattern[2..3] = second pair. Fingers in on-screen order.
+  let pattern = [
+    { fingers: [1, 0, 1, 1], art: "normal", inst: "trumpet" }, { fingers: [0, 1, 1, 0], art: "normal", inst: "trumpet" },
+    { fingers: [1, 1, 0, 1], art: "normal", inst: "djembe" },  { fingers: [0, 1, 0, 1], art: "sustain", inst: "sax" }];
+  const handOf = (set, idx) => set * 2 + (idx >> 2);
   let curKey = "salsa", cur = RHYTHMS[curKey], curLanes = [], claveMode = "32", bpm = cur.bpm;
-  let drumsOn = true, trumpetOn = true;
+  let drumsOn = true, handsOn = true;
   let playing = false, step = 0, nextTime = 0, timer = null, raf = null, uiQ = [], prevStep = -1;
 
-  // recording: one entry per trumpet step: {on, art}. A "take" replays it.
+  // recording: one entry per step: [note of pair 1, note of pair 2], each {on, art, inst}. A "take" replays it.
   let mode = "live";          // live | armed | rec | take
-  let take = null;            // {key, clave, bpm, len, steps:[{on,art}]}
+  let take = null;            // {key, clave, bpm, len, steps:[[{on,art,inst},{on,art,inst}]]}
   let recPos = 0, takePos = 0;
 
   const tl = () => cur.len === 16 ? 8 : cur.len;   // steps the two hands cover (7 in 7/8)
@@ -72,7 +79,7 @@
   function init(ac) {
     ctx = ac;
     const comp = ac.createDynamicsCompressor();
-    master = ac.createGain(); master.gain.value = 0.82;
+    master = ac.createGain(); master.gain.value = 0.66;
     master.connect(comp).connect(ac.destination);
     noiseBuf = ac.createBuffer(1, Math.floor(ac.sampleRate * 0.25), ac.sampleRate);
     const d = noiseBuf.getChannelData(0);
@@ -84,11 +91,11 @@
     return ctx;
   }
 
-  function trumpet(t, dur) {
+  function trumpet(t, dur, pitch = INST.trumpet) {
     const ac = ctx;
     const o1 = ac.createOscillator(), o2 = ac.createOscillator();
     o1.type = o2.type = "sawtooth";
-    o1.frequency.value = PITCH; o2.frequency.value = PITCH; o2.detune.value = 6;
+    o1.frequency.value = pitch; o2.frequency.value = pitch; o2.detune.value = 6;
     const lp = ac.createBiquadFilter();
     lp.type = "lowpass"; lp.Q.value = 3;
     lp.frequency.setValueAtTime(700, t);
@@ -111,6 +118,61 @@
     }
     o1.start(t); o2.start(t); o1.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
   }
+  // sax: reedy square + saw, softer attack, a little breath, vibrato on long notes
+  function sax(t, dur) {
+    const ac = ctx, f = INST.sax;
+    const o1 = ac.createOscillator(), o2 = ac.createOscillator();
+    o1.type = "square"; o2.type = "sawtooth"; o1.frequency.value = f; o2.frequency.value = f; o2.detune.value = -5;
+    const m2 = ac.createGain(); m2.gain.value = 0.6;
+    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.Q.value = 5;
+    lp.frequency.setValueAtTime(900, t); lp.frequency.linearRampToValueAtTime(2200, t + 0.06); lp.frequency.linearRampToValueAtTime(1600, t + 0.3);
+    const g = ac.createGain(), peak = 0.13;
+    const a = Math.min(0.03, dur * 0.3), r = Math.min(0.06, dur * 0.35);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + a);
+    g.gain.linearRampToValueAtTime(peak * 0.8, t + dur - r); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    o1.connect(lp); o2.connect(m2).connect(lp); lp.connect(g).connect(master);
+    // breath
+    const n = ac.createBufferSource(); n.buffer = noiseBuf; n.loop = true;
+    const bf = ac.createBiquadFilter(); bf.type = "bandpass"; bf.frequency.value = 2500; bf.Q.value = 0.8;
+    const bg = ac.createGain(); bg.gain.setValueAtTime(0.0001, t); bg.gain.linearRampToValueAtTime(0.025, t + 0.02); bg.gain.linearRampToValueAtTime(0.0001, t + Math.min(dur, 0.15));
+    n.connect(bf).connect(bg).connect(master); n.start(t); n.stop(t + dur + 0.05);
+    if (dur > 0.3) {
+      const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = 5;
+      lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(12, t + 0.3);
+      lfo.connect(lg); lg.connect(o1.detune); lg.connect(o2.detune); lfo.start(t); lfo.stop(t + dur + 0.05);
+    }
+    o1.start(t); o2.start(t); o1.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
+  }
+  // voice: a sung "ah" (saw through three vowel formants), gentle vibrato
+  function voice(t, dur) {
+    const ac = ctx, f = INST.voice;
+    const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = f;
+    const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = 5.2;
+    lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(dur > 0.3 ? 14 : 4, t + 0.25);
+    lfo.connect(lg).connect(o.detune); lfo.start(t); lfo.stop(t + dur + 0.08);
+    const g = ac.createGain(), peak = 1.25;
+    const a = Math.min(0.045, dur * 0.35), r = Math.min(0.08, dur * 0.4);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + a);
+    g.gain.linearRampToValueAtTime(peak * 0.85, t + dur - r); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    [[800, 1, 9], [1150, 0.5, 10], [2900, 0.18, 12]].forEach(([fq, amp, q]) => {
+      const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = fq; bp.Q.value = q;
+      const fg = ac.createGain(); fg.gain.value = amp;
+      o.connect(bp).connect(fg).connect(g);
+    });
+    g.connect(master); o.start(t); o.stop(t + dur + 0.08);
+  }
+  // djembe slap: bright crack + short ringing skin
+  function djembe(t) {
+    noiseHit(t, "bandpass", 2600, 1.1, 0.75, 0.06);
+    tone(t, "triangle", 420, 330, 0.42, 0.09);
+  }
+  function playInst(inst, t, dur) {
+    if (inst === "sax") sax(t, dur);
+    else if (inst === "voice") voice(t, dur);
+    else if (inst === "djembe") djembe(t);
+    else trumpet(t, dur);
+  }
+
   function env(g, t, peak, decay) { g.gain.setValueAtTime(peak, t); g.gain.exponentialRampToValueAtTime(0.0001, t + decay); }
   function noiseHit(t, type, freq, Q, peak, decay) {
     const n = ctx.createBufferSource(); n.buffer = noiseBuf;
@@ -161,20 +223,21 @@
   const stepDur = () => 60 / bpm / 2;
   const noteLen = (art, gap, sd) => art === "staccato" ? Math.max(0.07, sd * 0.35) : art === "sustain" ? sd * gap * 0.97 : sd * 0.72;
 
-  // which notes sound at trumpet index idx: live hands, or the recorded take
-  function liveNote(idx) {
-    const Tn = tl(), h = idx >> 2, f = idx & 3;
-    if (!pattern[h].fingers[f]) return null;
+  // which note a pair of hands plays at index idx: live hands, or the recorded take.
+  // Sustain holds until that pair's next note (max 6 steps).
+  function liveNote(set, idx) {
+    const Tn = tl(), p = pattern[handOf(set, idx)];
+    if (!p.fingers[idx & 3]) return null;
     let gap = 6;
-    for (let i = 1; i <= 6; i++) { const m = (idx + i) % Tn; if (pattern[m >> 2].fingers[m & 3]) { gap = i; break; } }
-    return { art: pattern[h].art, gap };
+    for (let i = 1; i <= 6; i++) { const m = (idx + i) % Tn; if (pattern[handOf(set, m)].fingers[m & 3]) { gap = i; break; } }
+    return { art: p.art, inst: p.inst, gap };
   }
-  function takeNote(pos) {
-    const s = take.steps[pos];
+  function takeNote(set, pos) {
+    const s = take.steps[pos][set];
     if (!s.on) return null;
     let gap = 6;
-    for (let i = 1; i <= 6; i++) { if (take.steps[(pos + i) % take.steps.length].on) { gap = i; break; } }
-    return { art: s.art, gap };
+    for (let i = 1; i <= 6; i++) { if (take.steps[(pos + i) % take.steps.length][set].on) { gap = i; break; } }
+    return { art: s.art, inst: s.inst, gap };
   }
 
   function scheduleStep(n, t) {
@@ -183,20 +246,19 @@
 
     // start recording on a bar line
     if (mode === "armed" && idx === 0) { mode = "rec"; recPos = 0; take = { key: curKey, clave: claveMode, bpm, len: Tn, steps: [] }; }
-    let note = null, ui = { step: n, time: t };
+    let notes = [null, null], ui = { step: n, time: t };
     if (mode === "take") {
-      note = takeNote(takePos);
+      notes = [takeNote(0, takePos), takeNote(1, takePos)];
       ui.take = takePos; takePos = (takePos + 1) % take.steps.length;
     } else {
-      note = liveNote(idx);
+      notes = [liveNote(0, idx), liveNote(1, idx)];
       if (mode === "rec") {
-        const h = idx >> 2;
-        take.steps.push({ on: !!pattern[h].fingers[idx & 3], art: pattern[h].art });
+        take.steps.push([0, 1].map(set => { const p = pattern[handOf(set, idx)]; return { on: !!p.fingers[idx & 3], art: p.art, inst: p.inst }; }));
         ui.rec = take.steps.length;
         if (take.steps.length >= MAX_BARS * Tn) ui.recDone = true;
       }
     }
-    if (trumpetOn && note) trumpet(t, noteLen(note.art, note.gap, sd));
+    if (handsOn) notes.forEach(nt => { if (nt) playInst(nt.inst, t, noteLen(nt.art, nt.gap, sd)); });
     return ui;
   }
 
@@ -231,18 +293,19 @@
     return `<path d="M${x - 2} 14 l5 -4 l-3.5 6 l4.5 4.5" class="rest"/>`;
   }
   function handSVG(h, fingers) {
-    const lens = h === 0 ? LEN_LEFT : LEN_RIGHT;
-    let o = `<svg viewBox="0 0 110 118" role="group" aria-label="${h === 0 ? T.left_short : T.right_short}">`;
+    const lens = (h & 1) === 0 ? LEN_LEFT : LEN_RIGHT;
+    const side = h & 1;
+    let o = `<svg viewBox="0 0 110 118" role="group" aria-label="${(h < 2 ? T.pair1 : T.pair2) + " · " + (side === 0 ? T.left_short : T.right_short)}">`;
     [10, 15, 20, 25, 30].forEach(y => { o += `<line x1="6" y1="${y}" x2="104" y2="${y}" class="staffl"/>`; });
     o += `<rect class="palm" x="14" y="70" width="82" height="44" rx="14"/>`;
-    o += h === 0
+    o += side === 0
       ? `<rect class="thumb" x="1" y="82" width="13" height="26" rx="6.5" transform="rotate(-28 8 95)"/>`
       : `<rect class="thumb" x="96" y="82" width="13" height="26" rx="6.5" transform="rotate(28 102 95)"/>`;
     o += `<path class="knuckles" d="M22 80 h66" />`;
     for (let i = 0; i < 4; i++) {
       const on = !!fingers[i], c = CX[i], L = lens[i];
-      const dis = h === 1 && i === 3 && tl() === 7;
-      const num = h * 4 + i + 1;
+      const dis = (h & 1) === 1 && i === 3 && tl() === 7;
+      const num = (h & 1) * 4 + i + 1;
       o += `<g data-f="${i}" class="${on ? "on" : ""}${dis ? " dis" : ""}" tabindex="${dis ? -1 : 0}" role="button" aria-pressed="${on}"` +
         ` aria-label="${fmt(T.finger, { n: num })}: ${on ? T.on : T.off}"${dis ? ' aria-disabled="true"' : ""}>` +
         noteGlyph(c - 1, on) +
@@ -255,19 +318,32 @@
   /* ---------- build UI ---------- */
   const slotsEl = $("slots"), lanesEl = $("lanes"), laneLabel = $("laneLabel");
   const ARTS = [["normal", T.art_normal], ["sustain", T.art_sustain], ["staccato", T.art_staccato]];
+  const slotEls = [];
   pattern.forEach((p, h) => {
+    if ((h & 1) === 0) {
+      const lab = document.createElement("p");
+      lab.className = "pair"; lab.textContent = h === 0 ? T.pair1 : T.pair2;
+      slotsEl.appendChild(lab);
+    }
     const el = document.createElement("div");
     el.className = "slot"; el.dataset.s = h;
-    el.innerHTML = `<div class="cap">${h === 0 ? T.left : T.right}</div><div class="hand"></div>` +
+    el.innerHTML = `<div class="cap">${(h & 1) === 0 ? T.left : T.right}</div>` +
+      `<label class="inst"><span class="sr">${T.inst}</span><select data-inst>` +
+      INST_KEYS.map(k => `<option value="${k}">${T["i_" + k]}</option>`).join("") + `</select></label>` +
+      `<div class="hand"></div>` +
       `<div class="art" role="group">` + ARTS.map(a => `<button type="button" data-art="${a[0]}" aria-pressed="false">${a[1]}</button>`).join("") + `</div>`;
-    slotsEl.appendChild(el);
+    slotsEl.appendChild(el); slotEls.push(el);
   });
   function renderSlot(h, shown) {
     const p = shown || pattern[h];
-    const el = slotsEl.children[h];
+    const el = slotEls[h];
     const focused = document.activeElement && el.contains(document.activeElement) && document.activeElement.dataset.f;
     el.querySelector(".hand").innerHTML = handSVG(h, p.fingers);
-    el.querySelectorAll("[data-art]").forEach(b => { const s = b.dataset.art === p.art; b.classList.toggle("sel", s); b.setAttribute("aria-pressed", String(s)); });
+    const perc = p.inst === "djembe";   // percussion: playing style does not apply
+    el.querySelectorAll("[data-art]").forEach(b => { const s = b.dataset.art === p.art; b.classList.toggle("sel", s && !perc); b.setAttribute("aria-pressed", String(s && !perc)); b.disabled = perc; });
+    const sel = el.querySelector("[data-inst]"); if (sel.value !== p.inst) sel.value = p.inst;
+    sel.disabled = mode === "take";
+    el.dataset.inst = p.inst;
     if (focused !== undefined && focused !== false && focused !== null) { const g = el.querySelector(`g[data-f="${focused}"]`); if (g) g.focus(); }
     if (prevStep >= 0) setPlayhead(prevStep);
   }
@@ -277,7 +353,7 @@
     if (mode === "take") return;
     pattern[h].fingers[f] = pattern[h].fingers[f] ? 0 : 1;
     renderSlot(h); saveHash();
-    if (pattern[h].fingers[f] && trumpetOn && !playing) { const ac = audio(); trumpet(ac.currentTime + 0.01, 0.3); }
+    if (pattern[h].fingers[f] && handsOn && !playing) { const ac = audio(); playInst(pattern[h].inst, ac.currentTime + 0.01, 0.3); }
   }
   slotsEl.addEventListener("click", e => {
     const slot = e.target.closest(".slot"); if (!slot) return;
@@ -286,6 +362,12 @@
     if (ab) { if (mode === "take") return; pattern[h].art = ab.dataset.art; renderSlot(h); saveHash(); return; }
     const fg = e.target.closest("[data-f]");
     if (fg && !fg.classList.contains("dis")) toggleFinger(h, +fg.dataset.f);
+  });
+  slotsEl.addEventListener("change", e => {
+    const sel = e.target.closest("[data-inst]"); if (!sel || mode === "take") return;
+    const h = +sel.closest(".slot").dataset.s;
+    pattern[h].inst = sel.value; renderSlot(h); saveHash();
+    if (handsOn && !playing) { const ac = audio(); playInst(sel.value, ac.currentTime + 0.01, 0.35); }
   });
   slotsEl.addEventListener("keydown", e => {
     const fg = e.target.closest && e.target.closest("[data-f]");
@@ -317,20 +399,24 @@
     prevStep = n;
     if (n < 0 || n >= cur.len) return;
     lanesEl.querySelectorAll(`[data-step="${n}"]`).forEach(x => x.classList.add("cur"));
-    const idx = n % tl(), slot = slotsEl.children[idx >> 2];
-    slot.classList.add("cur");
-    const g = slot.querySelector(`g[data-f="${idx & 3}"]`);
-    if (g) g.classList.add("playing");
+    const idx = n % tl();
+    [0, 1].forEach(set => {
+      const slot = slotEls[handOf(set, idx)];
+      slot.classList.add("cur");
+      const g = slot.querySelector(`g[data-f="${idx & 3}"]`);
+      if (g) g.classList.add("playing");
+    });
   }
 
   /* take playback: the hands show the recorded bar */
   function showTakeStep(pos) {
     if (pos % take.len !== 0) return;
     const bar = take.steps.slice(pos, pos + take.len);
-    [0, 1].forEach(h => {
-      const fingers = [0, 1, 2, 3].map(f => { const s = bar[h * 4 + f]; return s && s.on ? 1 : 0; });
-      const s0 = bar[h * 4] || bar[0];
-      renderSlot(h, { fingers, art: s0 ? s0.art : "normal" });
+    [0, 1, 2, 3].forEach(h => {
+      const set = h >> 1, side = h & 1;
+      const fingers = [0, 1, 2, 3].map(f => { const s = bar[side * 4 + f]; return s && s[set].on ? 1 : 0; });
+      const s0 = (bar[side * 4] || bar[0])[set];
+      renderSlot(h, { fingers, art: s0.art, inst: s0.inst });
     });
     const bars = take.steps.length / take.len;
     status(fmt(T.st_take, { i: pos / take.len + 1, n: bars }));
@@ -427,7 +513,7 @@
   claveSel.addEventListener("change", () => { claveMode = claveSel.value; rebuild(); renderLanes(); saveHash(); });
 
   btn("drums").addEventListener("click", () => { drumsOn = !drumsOn; setBtn("drums", drumsOn); });
-  btn("trumpet").addEventListener("click", () => { trumpetOn = !trumpetOn; setBtn("trumpet", trumpetOn); });
+  btn("hands").addEventListener("click", () => { handsOn = !handsOn; setBtn("hands", handsOn); });
   btn("clear").addEventListener("click", () => { if (mode === "take") return; pattern.forEach(p => { p.fingers = [0, 0, 0, 0]; }); renderHands(); saveHash(); });
   btn("share").addEventListener("click", async () => {
     saveHash();
@@ -452,11 +538,13 @@
   root.addEventListener("pointerdown", () => audio(), { once: true });
 
   /* ---------- share link: #r=salsa&t=160&c=32&f=10110110&a=nn ---------- */
+  // #r=salsa&t=160&c=32&f=16 digits (4 hands)&a=4 styles (n/s/t)&i=4 instruments (t/x/d/v)
   const ART_CODE = { normal: "n", sustain: "s", staccato: "t" }, CODE_ART = { n: "normal", s: "sustain", t: "staccato" };
   function saveHash() {
     const f = pattern.map(p => p.fingers.join("")).join("");
     const a = pattern.map(p => ART_CODE[p.art]).join("");
-    const h = `#r=${curKey}&t=${bpm}&c=${claveMode}&f=${f}&a=${a}`;
+    const i = pattern.map(p => INST_CODE[p.inst]).join("");
+    const h = `#r=${curKey}&t=${bpm}&c=${claveMode}&f=${f}&a=${a}&i=${i}`;
     if (location.hash !== h) history.replaceState(null, "", h);
   }
   function loadHash() {
@@ -464,8 +552,10 @@
     if (q.get("r") && RHYTHMS[q.get("r")]) { curKey = q.get("r"); cur = RHYTHMS[curKey]; bpm = cur.bpm; }
     const t = +q.get("t"); if (t >= 60 && t <= 240) bpm = t;
     if (q.get("c") === "23") claveMode = "23";
-    const f = q.get("f"); if (f && /^[01]{8}$/.test(f)) pattern.forEach((p, h) => { p.fingers = f.slice(h * 4, h * 4 + 4).split("").map(Number); });
-    const a = q.get("a"); if (a && /^[nst]{2}$/.test(a)) pattern.forEach((p, h) => { p.art = CODE_ART[a[h]]; });
+    const f = q.get("f");
+    if (f && /^([01]{8}|[01]{16})$/.test(f)) pattern.forEach((p, h) => { if (h * 4 < f.length) p.fingers = f.slice(h * 4, h * 4 + 4).split("").map(Number); });
+    const a = q.get("a"); if (a && /^[nst]{2,4}$/.test(a)) pattern.forEach((p, h) => { if (a[h]) p.art = CODE_ART[a[h]]; });
+    const i = q.get("i"); if (i && /^[txdv]{4}$/.test(i)) pattern.forEach((p, h) => { p.inst = CODE_INST[i[h]]; });
   }
 
   /* ---------- go ---------- */
@@ -478,14 +568,14 @@
   if (/[?&]mans-test\b/.test(location.search)) {
     window.__mansRender = async (key, seconds, opts = {}) => {
       const off = new OfflineAudioContext(1, Math.ceil(44100 * seconds), 44100);
-      const keep = { ctx, master, noiseBuf, drumsOn, trumpetOn, curKey, bpm };
-      init(off); applyRhythm(key); drumsOn = opts.drums !== false; trumpetOn = opts.trumpet !== false;
-      if (opts.fingers) pattern.forEach((p, h) => { p.fingers = opts.fingers.slice(h * 4, h * 4 + 4); p.art = opts.art || "normal"; });
+      const keep = { ctx, master, noiseBuf, drumsOn, handsOn, curKey, bpm, pattern: JSON.parse(JSON.stringify(pattern)) };
+      init(off); applyRhythm(key); drumsOn = opts.drums !== false; handsOn = opts.hands !== false;
+      if (opts.hands4) opts.hands4.forEach((o, h) => Object.assign(pattern[h], o));
       let s = 0, tt = 0.05;
       while (tt < seconds - 0.5) { scheduleStep(s, tt); s = (s + 1) % cur.len; tt += stepDur(); }
       const buf = await off.startRendering(), d = buf.getChannelData(0);
       let pk = 0, sq = 0; for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > pk) pk = v; sq += d[i] * d[i]; }
-      ({ ctx, master, noiseBuf, drumsOn, trumpetOn } = keep); applyRhythm(keep.curKey); setTempo(keep.bpm);
+      ({ ctx, master, noiseBuf, drumsOn, handsOn } = keep); pattern = keep.pattern; applyRhythm(keep.curKey); setTempo(keep.bpm);
       return { peak: +pk.toFixed(3), rms: +Math.sqrt(sq / d.length).toFixed(4) };
     };
   }

@@ -118,6 +118,7 @@ html.is-scrolled .menu-btn { opacity: 1; visibility: visible; transform: none; t
     border: 1px solid rgb(240 237 235 / .3); background: rgb(12 4 4 / .45); color: var(--ink); }
   .langs a[aria-current] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
   .nav { order: 3; flex: 1 0 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem; }
+  .nav__contact { display: none !important; }   /* phones: contact is in the menu and the footer */
   .nav a { display: grid; place-items: center; min-height: 48px; padding: 0 .3rem; font-size: .8rem; letter-spacing: .04em; text-align: center;
     border: 1px solid rgb(240 237 235 / .3); background: rgb(12 4 4 / .45); }
   .nav a[aria-current] { background: var(--pink); border-color: var(--pink); color: var(--bg); }
@@ -346,7 +347,7 @@ html.a11y-font .label, html.a11y-font .mono { letter-spacing: .02em; }
 .slot { background: var(--bg-2); border: 1px solid var(--line); padding: .9rem .6rem .7rem; transition: border-color .1s, background .1s; }
 .slot.cur { border-color: var(--pink); }
 .slot .cap { font: .68rem/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: .3rem; }
-.slot svg { display: block; width: 100%; max-width: 280px; margin: 0 auto; height: auto; -webkit-tap-highlight-color: transparent; overflow: visible; }
+.slot svg { display: block; width: 100%; max-width: 220px; margin: 0 auto; height: auto; -webkit-tap-highlight-color: transparent; overflow: visible; }
 .slot g[data-f] { cursor: pointer; outline: none; }
 .slot g[data-f]:focus-visible .fing { stroke: var(--pink); stroke-width: 2; }
 .slot g.dis { opacity: .2; pointer-events: none; }
@@ -397,3 +398,17 @@ html.a11y-font .label, html.a11y-font .mono { letter-spacing: .02em; }
 .play-teaser__art:hover { border-color: var(--pink); }
 .play-teaser__art svg { display: block; width: 100%; height: auto; }
 @media (max-width: 860px) { .play-teaser { grid-template-columns: 1fr; } }
+
+/* game: pairs of hands + instrument picker */
+.mans__hands { max-width: 760px; row-gap: .6rem; }
+.mans__hands .pair { grid-column: 1 / -1; margin: .6rem 0 -.1rem; font: .72rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.mans__hands .pair:first-child { margin-top: 0; }
+.slot .inst { display: block; margin: 0 auto .35rem; max-width: 280px; }
+.slot .inst select { width: 100%; min-height: 40px; padding: 0 .6rem; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: .95rem var(--body); cursor: pointer; }
+.slot .inst select:hover { border-color: var(--pink); }
+.slot .inst select:disabled { opacity: .6; cursor: default; }
+.slot[data-inst="djembe"] .on .fing { fill: #d9b48a; }
+.slot[data-inst="sax"] .on .fing { fill: #e6cf7a; }
+.slot[data-inst="voice"] .on .fing { fill: #b9d7c4; }
+.slot .playing .fing, .slot .playing.on .fing { fill: var(--pink); }
+.art button:disabled { opacity: .3; cursor: default; }

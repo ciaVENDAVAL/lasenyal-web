@@ -12,6 +12,7 @@
       else { menu.classList.remove("is-open"); setTimeout(() => { if (!menu.classList.contains("is-open")) menu.hidden = true; }, 600); }
     };
     menuBtn.addEventListener("click", e => { e.stopPropagation(); setMenu(!isOpen()); });
+    menu.addEventListener("click", e => { if (e.target.closest('a[href^="#"]')) setMenu(false); });
     // top of page: all links; scrolled: the 3-line box
     let scrolled = null;
     const onScroll = () => {

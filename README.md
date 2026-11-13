@@ -15,7 +15,7 @@ PDFs (press kit) go in the sister repo **lasenyal-docs**.
 
 ## The hands game (Mans / Manos / Hands)
 
-Two hands, thumbs outward; each finger is an eighth note (finger up = trumpet plays). Six rhythms, tempo, clave 3-2/2-3, articulation per hand.
+Two pairs of hands, thumbs outward; each finger is an eighth note (finger up = it plays). Both pairs play the same bar together. Each hand picks an instrument: trumpet (B♭), sax (F), voice (D) — together a B♭ major chord — or djembe slap (percussion, so the playing-style buttons are off). Six rhythms, tempo, clave 3-2/2-3, playing style per hand.
 **Record** starts at the next bar and keeps what the hands play (up to 32 bars); **Play recording** replays it with the hands moving.
 The current hands, rhythm and tempo are kept in the page address, so **Copy link** shares a groove.
 
