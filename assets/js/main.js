@@ -12,6 +12,18 @@
       else { menu.classList.remove("is-open"); setTimeout(() => { if (!menu.classList.contains("is-open")) menu.hidden = true; }, 600); }
     };
     menuBtn.addEventListener("click", e => { e.stopPropagation(); setMenu(!isOpen()); });
+    // top of page: all links; scrolled: the 3-line box
+    let scrolled = null;
+    const onScroll = () => {
+      const now = scrollY > 60;
+      if (now === scrolled) return;
+      scrolled = now;
+      document.documentElement.classList.toggle("is-scrolled", now);
+      menuBtn.tabIndex = now ? 0 : -1;
+      if (!now && isOpen()) setMenu(false);
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     document.addEventListener("click", e => { if (isOpen() && !e.target.closest("#menu")) setMenu(false); });
     document.addEventListener("keydown", e => { if (e.key === "Escape" && isOpen()) { setMenu(false); menuBtn.focus(); } });
   }
