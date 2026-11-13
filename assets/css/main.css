@@ -64,7 +64,7 @@ p { margin: 0 0 1em; }
 .hero { position: relative; min-height: min(100svh, 980px); display: flex; align-items: flex-end; overflow: hidden; }
 .hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; }
 .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(12 4 4 / .45) 0%, rgb(12 4 4 / 0) 30%, rgb(12 4 4 / .1) 55%, rgb(12 4 4 / .92) 100%); }
-.hero__in { position: relative; z-index: 1; padding: 0 var(--pad) clamp(2rem, 6vw, 4.5rem); }
+.hero__in { position: relative; z-index: 1; padding: 0 var(--pad) max(clamp(2rem, 6vw, 4.5rem), 84px); } /* 84px: keeps the tagline above the accessibility button */
 .hero__logo { width: clamp(76px, 9vw, 120px); height: auto; margin-bottom: 1.25rem; }
 .hero__logo { animation: spin 18s linear infinite; transform-origin: 50% 50%; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -216,9 +216,9 @@ p { margin: 0 0 1em; }
 /* ── accessibility button + panel ───────
    The button sits bottom-left; the footer keeps an 84px left margin so it never covers footer text. */
 .a11y { position: fixed; left: calc(1rem + env(safe-area-inset-left, 0px)); bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 90; }
-.a11y-btn { width: 48px; height: 48px; padding: 11px; border: 2px solid var(--pink); border-radius: 50%; background: var(--bg); color: var(--pink); cursor: pointer; box-shadow: 0 8px 24px -8px rgb(0 0 0 / .8); transition: background .2s, color .2s; }
+.a11y-btn { width: 48px; height: 48px; padding: 11px; border: 2px solid var(--pink); border-radius: 50%; background: rgb(12 4 4 / .25); color: var(--pink); cursor: pointer; opacity: .6; transition: background .2s, color .2s, opacity .2s; -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
 .a11y-btn svg { width: 100%; height: 100%; fill: currentColor; display: block; }
-.a11y-btn:hover, .a11y-btn[aria-expanded="true"] { background: var(--pink); color: var(--bg); }
+.a11y-btn:hover, .a11y-btn:focus-visible, .a11y-btn[aria-expanded="true"] { opacity: 1; background: var(--pink); color: var(--bg); }
 .a11y-panel { position: absolute; left: 0; bottom: 60px; width: min(290px, calc(100vw - 2rem)); max-height: calc(100vh - 6rem); overflow: auto;
   background: var(--bg-2); color: var(--ink); border: 1px solid var(--line); padding: .8rem; display: grid; gap: .4rem; box-shadow: 0 20px 50px -15px rgb(0 0 0 / .9); font-size: .95rem; }
 .a11y-panel[hidden] { display: none; }
