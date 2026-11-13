@@ -1,0 +1,43 @@
+# Band members, in display order.
+# photo: file in assets/img/members/ (square, about 500×500)
+# role: key from "roles" in _data/i18n/<lang>.yml
+- name: Nestor Randazzo
+  role: perc_dir
+  photo: nestor-randazzo.jpg
+  instagram: https://www.instagram.com/nestorrandazzo/
+- name: Txus Eguílaz
+  role: perc_dir
+  photo: txus-eguilaz.jpg
+  instagram: https://www.instagram.com/txuseguilaz_ritmoenergia/
+- name: Alián Rodrigues
+  role: euph_dir
+  photo: alian-rodrigues.jpg
+  instagram: https://www.instagram.com/a.alian.n/
+- name: Stefano Ferraro
+  role: tenor
+  photo: stefano-ferraro.jpg
+  instagram: https://www.instagram.com/efe_stiv/
+- name: Facundo Fernandez Alberdi
+  role: perc
+  photo: facundo-fernandez-alberdi.jpg
+  instagram: https://www.instagram.com/ffa_musica/
+- name: Juan Pablo Bizzotto
+  role: perc
+  photo: juan-pablo-bizzotto.jpg
+  instagram: https://www.instagram.com/jota_bizzotto/
+- name: Raquel Navarro
+  role: perc
+  photo: raquel-navarro.jpg
+  instagram: https://www.instagram.com/raquelnavarro_worldmusic/
+- name: Juan Alfredo Lichter
+  role: alto
+  photo: juan-alfredo-lichter.jpg
+  instagram: https://www.instagram.com/juanlichter90/
+- name: Lucas Raiquen Pereyra
+  role: trumpet
+  photo: lucas-raiquen-pereyra.jpg
+  instagram: https://www.instagram.com/lukasraiquen/
+- name: Tyle Michael Fernández
+  role: bari
+  photo: tyle-michael-fernandez.jpg
+  instagram: https://www.instagram.com/contamina_perpetua/

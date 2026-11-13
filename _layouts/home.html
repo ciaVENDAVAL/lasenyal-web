@@ -1,0 +1,79 @@
+---
+layout: default
+---
+{%- assign t = site.data.i18n[page.lang] -%}
+{%- assign L = site.languages | where: "code", page.lang | first -%}
+{%- assign today = site.time | date: "%Y-%m-%d" -%}
+{%- assign gigs = site.data.concerts | sort: "date" -%}
+
+<section class="hero">
+  <img class="hero__bg" src="{{ '/assets/img/lg/vientos-jardin.jpg' | relative_url }}" alt="" fetchpriority="high">
+  <div class="hero__in">
+    <img class="hero__logo" src="{{ '/assets/img/logo.png' | relative_url }}" alt="" width="120" height="120">
+    <h1>La Senyal</h1>
+    <p class="hero__tag">{{ t.tagline }}</p>
+  </div>
+</section>
+
+<section class="wrap intro">
+  <div class="intro__text">
+    <p class="label">/ {{ t.intro_label }} /</p>
+    <p class="lead">{{ t.intro }}</p>
+    <p>{{ t.intro2 }}</p>
+  </div>
+  <figure class="intro__img">
+    <img src="{{ '/assets/img/sm/direccion-senas.jpg' | relative_url }}" data-lg="{{ '/assets/img/lg/direccion-senas.jpg' | relative_url }}" alt="" loading="lazy">
+  </figure>
+</section>
+
+<section class="wrap how">
+  <p class="label">/ {{ t.how_label }} /</p>
+  <ol class="how__list">
+    {%- for h in t.how %}
+    <li><span class="how__n">0{{ forloop.index }}</span><h2>{{ h.t }}</h2><p>{{ h.d }}</p></li>
+    {%- endfor %}
+  </ol>
+  <p class="how__note">{{ t.how_note }}</p>
+</section>
+
+<section class="wrap next">
+  <div class="next__box">
+    <img class="next__drum" src="{{ '/assets/img/tambor.png' | relative_url }}" alt="" width="220" height="220" loading="lazy">
+    <div class="next__body">
+      <p class="label">/ {{ site.time | date: "%Y" }} /</p>
+      <h2>{{ t.next_label }}</h2>
+      <ul class="gigs" data-list="upcoming" data-max="3">
+        {%- assign n = 0 -%}
+        {%- for c in gigs -%}
+          {%- if c.end -%}{%- assign ce = c.end | date: "%Y-%m-%d" -%}{%- else -%}{%- assign ce = c.date | date: "%Y-%m-%d" -%}{%- endif -%}
+          {%- if ce >= today and n < 3 -%}
+            {%- include gig.html c=c t=t -%}
+            {%- assign n = n | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor %}
+      </ul>
+      <p class="gigs__none"{% if n > 0 %} hidden{% endif %}>{{ t.none_upcoming }}</p>
+      <a class="btn btn--dark" href="{{ L.pages.concerts | relative_url }}">{{ t.all_concerts }} →</a>
+    </div>
+  </div>
+</section>
+
+<section class="strip" aria-label="{{ t.gallery_label }}">
+  {%- for g in site.data.gallery %}
+  <a class="strip__i strip__i--{{ g.o }}" href="{{ '/assets/img/lg/' | append: g.f | relative_url }}" data-gal>
+    <img src="{{ '/assets/img/sm/' | append: g.f | relative_url }}" alt="" loading="lazy">
+  </a>
+  {%- endfor %}
+</section>
+
+<section class="wrap duo">
+  <a class="card" href="{{ site.contact.video }}" rel="noopener">
+    <img src="{{ '/assets/img/sm/la-nau.jpg' | relative_url }}" alt="" loading="lazy">
+    <span class="card__play" aria-hidden="true">▶</span>
+    <span class="card__t">{{ t.watch }} ↗</span>
+  </a>
+  <a class="card" href="{{ L.pages.members | relative_url }}">
+    <img src="{{ '/assets/img/sm/grupo-banco.jpg' | relative_url }}" alt="" loading="lazy">
+    <span class="card__t">{{ t.see_members }} →</span>
+  </a>
+</section>

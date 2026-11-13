@@ -1,0 +1,74 @@
+meta_description: "La Senyal, ensemble de percussió, vents i veu de Barcelona que improvisa en directe guiat amb signes."
+skip: "Ves al contingut"
+
+nav:
+  home: Inici
+  members: Equip
+  concerts: Concerts
+
+tagline: "Improvisació en temps real, dirigida amb signes."
+
+intro_label: "La banda"
+intro: "La Senyal és un ensemble de percussió, vents i veu de Barcelona. No hi ha repertori fix: cada concert es compon en directe, a partir dels signes de qui dirigeix."
+intro2: "Ritmes afrollatins —cúmbia, candombe, salsa— creuats amb funk i balkan. Per escoltar i, sobretot, per ballar."
+
+how_label: "Com funciona"
+how:
+  - t: "Signes"
+    d: "Qui dirigeix compon amb les mans i el cos: marca ritmes, entrades, talls i dinàmiques. La banda respon a l'instant."
+  - t: "Direcció rotativa"
+    d: "Diversos músics es tornen la direcció. Cada nit sona diferent."
+  - t: "Convidades"
+    d: "A cada concert s'hi sumen músics convidats."
+how_note: "El llenguatge de signes el va crear Santiago Vázquez a Buenos Aires, amb La Bomba de Tiempo."
+
+next_label: "Propers concerts"
+none_upcoming: "Noves dates molt aviat."
+all_concerts: "Tots els concerts"
+see_members: "Coneix l'equip"
+watch: "Mira'ns en directe"
+gallery_label: "En directe"
+
+members_title: "Equip"
+members_intro: "Deu músics. Tres d'ells també dirigeixen."
+
+concerts_title: "Concerts"
+upcoming: "Propers"
+past: "Passats"
+superlunes_title: "Superdilluns"
+superlunes_intro: "Des del 2024 toquem cada dilluns en residències setmanals: un espai per provar, arriscar i ballar."
+every_monday: "Cada dilluns"
+map: "Mapa"
+info: "Info"
+
+contact: "Contacte"
+booking: "Concerts, festivals i premsa"
+presskit: "Dossier de premsa (PDF)"
+lang_label: "Idioma"
+close: "Tanca"
+prev: "Anterior"
+next: "Següent"
+
+months: [gener, febrer, març, abril, maig, juny, juliol, agost, setembre, octubre, novembre, desembre]
+months_short: [gen, feb, març, abr, maig, juny, jul, ag, set, oct, nov, des]
+
+roles:
+  perc_dir: "Percussió i direcció"
+  euph_dir: "Bombardí i direcció"
+  perc: "Percussió"
+  tenor: "Saxo tenor"
+  alto: "Saxo alt"
+  bari: "Saxo baríton"
+  trumpet: "Trompeta"
+
+# Press kit
+pk_title: "Dossier de premsa"
+pk_band: "La banda"
+pk_show: "El directe"
+pk_show_text: "Un concert de La Senyal és una composició col·lectiva en temps real. La direcció demana amb signes un ritme, un groove, un silenci, un solo; la banda ho converteix en música al moment. El públic no triga a ballar."
+pk_formats_label: "Formats"
+pk_formats: "Festivals, sales, festes majors, esdeveniments culturals i celebracions. A l'escenari o al carrer."
+pk_archive: "Arxiu"
+pk_lineup: "Formació"
+pk_video: "Vídeo en directe"
+pk_photo: "Foto"

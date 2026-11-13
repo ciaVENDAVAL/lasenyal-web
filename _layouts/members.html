@@ -1,0 +1,32 @@
+---
+layout: default
+---
+{%- assign t = site.data.i18n[page.lang] -%}
+<section class="wrap head">
+  <p class="label">/ La Senyal /</p>
+  <h1>{{ t.members_title }}</h1>
+  <p class="head__intro">{{ t.members_intro }}</p>
+</section>
+
+<figure class="wrap band-photo">
+  <img src="{{ '/assets/img/lg/grupo-jardin.jpg' | relative_url }}" alt="La Senyal" loading="lazy">
+</figure>
+
+<section class="wrap">
+  <ul class="members">
+    {%- for m in site.data.members %}
+    <li class="member">
+      <img src="{{ '/assets/img/members/' | append: m.photo | relative_url }}" alt="{{ m.name }}" width="500" height="500" loading="lazy">
+      <div class="member__row">
+        <h2>{{ m.name }}</h2>
+        {%- if m.instagram %}
+        <a class="member__ig" href="{{ m.instagram }}" rel="noopener" aria-label="Instagram — {{ m.name }}">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>
+        </a>
+        {%- endif %}
+      </div>
+      <p>{{ t.roles[m.role] }}</p>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>

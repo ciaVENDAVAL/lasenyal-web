@@ -1,0 +1,81 @@
+{%- assign t = site.data.i18n[page.lang] -%}
+{%- assign L = site.languages | where: "code", page.lang | first -%}
+{%- assign here = L.pages[page.ref] -%}
+<!doctype html>
+<html lang="{{ page.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- if page.ref == "home" %}
+  <title>La Senyal — {{ t.tagline }}</title>
+  {%- else %}
+  <title>{{ t.nav[page.ref] }} — La Senyal</title>
+  {%- endif %}
+  <meta name="description" content="{{ t.meta_description }}">
+  <link rel="canonical" href="{{ site.url }}{{ here | relative_url }}">
+  {%- for l in site.languages %}
+  <link rel="alternate" hreflang="{{ l.code }}" href="{{ site.url }}{{ l.pages[page.ref] | relative_url }}">
+  {%- endfor %}
+  <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.languages[1].pages[page.ref] | relative_url }}">
+  <meta property="og:title" content="La Senyal">
+  <meta property="og:description" content="{{ t.tagline }}">
+  <meta property="og:image" content="{{ site.url }}{{ '/assets/img/lg/grupo-jardin.jpg' | relative_url }}">
+  <meta property="og:locale" content="{{ L.locale }}">
+  <meta name="theme-color" content="#0C0404">
+  <link rel="icon" href="{{ '/assets/img/favicon.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/img/apple-touch-icon.png' | relative_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800;125,900&family=Fragment+Mono&family=Questrial&display=swap">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+</head>
+<body class="p-{{ page.ref }}">
+  <a class="skip" href="#main">{{ t.skip }}</a>
+
+  <header class="top">
+    <a class="brand" href="{{ L.pages.home | relative_url }}" aria-label="La Senyal — {{ t.nav.home }}">
+      <img src="{{ '/assets/img/logo.png' | relative_url }}" alt="" width="40" height="40">
+      <span>La Senyal</span>
+    </a>
+    <nav class="nav" aria-label="Menu">
+      {%- assign navkeys = "members,concerts" | split: "," -%}
+      {%- for k in navkeys %}
+      <a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a>
+      {%- endfor %}
+    </nav>
+    <nav class="langs" aria-label="{{ t.lang_label }}">
+      {%- for l in site.languages %}
+      <a href="{{ l.pages[page.ref] | relative_url }}" hreflang="{{ l.code }}" lang="{{ l.code }}" title="{{ l.name }}"{% if l.code == page.lang %} aria-current="true"{% endif %}>{{ l.label }}</a>
+      {%- endfor %}
+    </nav>
+  </header>
+
+  <main id="main">
+    {{ content }}
+  </main>
+
+  <footer class="foot" id="contact">
+    <img class="foot__logo" src="{{ '/assets/img/logo.png' | relative_url }}" alt="La Senyal" width="56" height="56" loading="lazy">
+    <div class="foot__contact">
+      <p class="label">/ {{ t.contact }} · {{ t.booking }} /</p>
+      <p>
+        <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+        {%- for ph in site.contact.phones %}
+        <span class="sep">·</span><a href="tel:{{ ph | remove: ' ' }}">{{ ph }}</a>
+        {%- endfor %}
+        <span class="sep">·</span><a href="{{ site.contact.instagram }}" rel="noopener">Instagram</a>
+        <span class="sep">·</span><a href="{{ site.docs_base }}lasenyal-presskit-{{ page.lang }}.pdf">{{ t.presskit }} ↓</a>
+      </p>
+    </div>
+    <p class="foot__meta">La Senyal · Barcelona · {{ site.time | date: "%Y" }}</p>
+  </footer>
+
+  <div class="lb" id="lb" hidden role="dialog" aria-modal="true">
+    <button class="lb__x" type="button" aria-label="{{ t.close }}">×</button>
+    <button class="lb__prev" type="button" aria-label="{{ t.prev }}">←</button>
+    <img alt="">
+    <button class="lb__next" type="button" aria-label="{{ t.next }}">→</button>
+  </div>
+  <script src="{{ '/assets/js/main.js' | relative_url }}" defer></script>
+</body>
+</html>

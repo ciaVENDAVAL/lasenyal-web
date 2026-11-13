@@ -1,0 +1,59 @@
+---
+layout: default
+---
+{%- assign t = site.data.i18n[page.lang] -%}
+{%- assign today = site.time | date: "%Y-%m-%d" -%}
+{%- assign gigs = site.data.concerts | sort: "date" -%}
+{%- assign gigs_desc = gigs | reverse -%}
+
+<section class="wrap head">
+  <p class="label">/ La Senyal /</p>
+  <h1>{{ t.concerts_title }}</h1>
+</section>
+
+<section class="wrap block">
+  <h2 class="block__t">{{ t.upcoming }}</h2>
+  {%- assign n = 0 %}
+  <ul class="gigs" data-list="upcoming">
+    {%- for c in gigs -%}
+      {%- if c.end -%}{%- assign ce = c.end | date: "%Y-%m-%d" -%}{%- else -%}{%- assign ce = c.date | date: "%Y-%m-%d" -%}{%- endif -%}
+      {%- if ce >= today -%}{%- include gig.html c=c t=t -%}{%- assign n = n | plus: 1 -%}{%- endif -%}
+    {%- endfor %}
+  </ul>
+  <p class="gigs__none"{% if n > 0 %} hidden{% endif %}>{{ t.none_upcoming }}</p>
+</section>
+
+<section class="wrap block">
+  <h2 class="block__t">{{ t.past }}</h2>
+  <ul class="gigs gigs--past" data-list="past">
+    {%- for c in gigs_desc -%}
+      {%- unless c.residency -%}
+      {%- assign ce = c.date | date: "%Y-%m-%d" -%}
+      {%- if ce < today -%}{%- include gig.html c=c t=t -%}{%- endif -%}
+      {%- endunless -%}
+    {%- endfor %}
+  </ul>
+</section>
+
+<section class="wrap block">
+  <h2 class="block__t">{{ t.superlunes_title }}</h2>
+  <p class="block__intro">{{ t.superlunes_intro }}</p>
+  <ul class="res">
+    {%- for c in gigs_desc -%}
+      {%- if c.residency %}
+      {%- assign m1 = c.date | date: "%-m" | minus: 1 -%}
+      {%- assign m2 = c.end | date: "%-m" | minus: 1 -%}
+      {%- assign y1 = c.date | date: "%Y" -%}
+      {%- assign y2 = c.end | date: "%Y" %}
+    <li class="res__i">
+      {%- if c.photo %}<img src="{{ '/assets/img/sm/' | append: c.photo | relative_url }}" alt="" loading="lazy">{% endif %}
+      <div class="res__txt">
+        <h3>{{ c.venue }}</h3>
+        <p class="mono">{% if c.label %}{{ c.label }}{% else %}{{ t.months[m1] }} {% if y1 != y2 %}{{ y1 }} {% endif %}– {{ t.months[m2] }} {{ y2 }}{% endif %}</p>
+        <p class="mono">{{ c.place }}</p>
+      </div>
+    </li>
+      {%- endif -%}
+    {%- endfor %}
+  </ul>
+</section>

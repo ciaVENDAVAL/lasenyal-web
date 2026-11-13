@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────────────────────
+#  CONCERTS — add a new one at the top, copying this pattern:
+#
+#  - date: 2027-03-14          # day of the concert (YYYY-MM-DD)
+#    venue: Sala Apolo         # name of the place
+#    place: Poble-sec, Barcelona
+#    time: "21:00"             # optional
+#    map: https://maps.app.goo.gl/…        # optional, Google Maps link
+#    link: https://…                       # optional, tickets / event page
+#
+#  Concerts move from "upcoming" to "past" on their own the day after.
+#
+#  Superlunes (weekly Monday residencies): add  residency: true
+#  plus  end:  (last Monday, YYYY-MM-DD) and an optional  photo:  from assets/img/sm/.
+#  If you only know the year, use  label: "2024"  and that is shown instead of the dates.
+# ─────────────────────────────────────────────────────────────
+
+- date: 2026-07-06
+  venue: Espigó de Bac de Roda
+  place: Sant Martí, Barcelona
+  map: https://maps.app.goo.gl/Ei58ACtNdxfFc5gg7
+
+# ── Superlunes ───────────────────────────────────────────────
+
+- date: 2026-02-02
+  end: 2026-06-29
+  residency: true
+  venue: Ocaña
+  place: Pl. Reial 13-15, Barcelona
+  photo: bateria.jpg
+
+- date: 2025-03-03
+  end: 2025-07-28
+  residency: true
+  venue: Generator Hostel
+  place: Carrer de Còrsega 373, Gràcia, Barcelona
+  photo: generator.jpg
+
+- date: 2024-06-03
+  end: 2024-08-26
+  residency: true
+  venue: Camping
+  place: Parc del Poblenou, Barcelona
+  photo: voz.jpg
+
+- date: 2024-01-01
+  end: 2024-12-31
+  label: "2024"
+  residency: true
+  venue: Absenta del Raval
+  place: Plaça del Pes de la Palla, Barcelona
+  photo: trompeta.jpg

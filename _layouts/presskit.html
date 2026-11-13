@@ -1,0 +1,184 @@
+{%- assign t = site.data.i18n[page.lang] -%}
+{%- assign L = site.languages | where: "code", page.lang | first -%}
+{%- assign gigs = site.data.concerts | sort: "date" | reverse -%}
+{%- assign today = site.time | date: "%Y-%m-%d" -%}
+{%- assign img = "/assets/img/" | relative_url -%}
+<!doctype html>
+<html lang="{{ page.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<meta name="robots" content="noindex">
+<title>La Senyal — {{ t.pk_title }} {{ site.time | date: "%Y" }}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Fragment+Mono&family=Questrial&display=swap">
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  :root { --bg:#0c0404; --bg2:#171211; --ink:#fff; --text:rgb(240 237 235/.82); --muted:rgb(240 237 235/.55); --pink:#e675b5; --green:#0a733b; --line:rgb(240 237 235/.16); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #333; }
+  body { font: 400 15px/1.5 "Questrial", sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pg { width: 1280px; height: 720px; position: relative; overflow: hidden; background: var(--bg); margin: 0 auto 24px; page-break-after: always; break-after: page; }
+  @media print { html, body { background: none; } .pg { margin: 0; } }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { margin: 0; color: var(--ink); font-weight: 400; }
+  p { margin: 0 0 .8em; }
+  .big { font: 900 92px/.9 "Archivo", sans-serif; font-stretch: 125%; text-transform: uppercase; letter-spacing: -.02em; color: var(--ink); }
+  .lab { font: 11px/1.4 "Fragment Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+  .mono { font: 11px/1.55 "Fragment Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+  .ln { display: inline-block; font: 11px/1 "Fragment Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); padding-bottom: 6px; border-bottom: 1px solid currentColor; }
+  .ph { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 0; }
+  .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  /* page 1 */
+  .p1 { display: grid; grid-template-columns: 640px 1fr; grid-template-rows: minmax(0, 1fr); }
+  .cover { position: relative; }
+  .cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(12 4 4/.1) 40%, rgb(12 4 4/.9)); }
+  .cover__in { position: absolute; left: 44px; right: 44px; bottom: 40px; z-index: 1; }
+  .cover__in img { width: 96px; height: auto; display: block; margin-bottom: 18px; }
+  .cover__in .big { font-size: 78px; }
+  .cover__in p { color: var(--ink); font-size: 19px; margin: 12px 0 0; }
+  .p1 .txt { padding: 64px 60px 48px 56px; display: flex; flex-direction: column; }
+  .p1 .lead { color: var(--ink); font-size: 25px; line-height: 1.3; margin-bottom: 20px; }
+  .p1 .txt > p:not(.lead):not(.lab):not(.note) { font-size: 16px; }
+  .how { margin-top: auto; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+  .how div { padding: 18px 16px 0 0; }
+  .how div + div { border-left: 1px solid var(--line); padding-left: 16px; }
+  .how b { display: block; color: var(--pink); font: 11px "Fragment Mono", monospace; margin-bottom: 8px; }
+  .how h3 { font: 900 16px/1.05 "Archivo", sans-serif; font-stretch: 125%; text-transform: uppercase; margin-bottom: 8px; }
+  .how p { font-size: 13px; line-height: 1.45; margin: 0; }
+  .note { font: 10px/1.5 "Fragment Mono", monospace; color: var(--muted); margin: 16px 0 0; }
+
+  /* page 2 */
+  .p2 { background: var(--green); display: grid; grid-template-columns: 1fr 400px; grid-template-rows: minmax(0, 1fr); }
+  .p2 .txt { padding: 64px 56px 48px; display: flex; flex-direction: column; color: rgb(255 255 255/.88); }
+  .p2 .lab { color: rgb(255 255 255/.7); }
+  .p2 .big { margin-bottom: 26px; }
+  .p2 .show { font-size: 21px; line-height: 1.38; color: var(--ink); max-width: 30em; }
+  .p2 .row { margin-top: auto; display: grid; grid-template-columns: 210px 1fr; gap: 40px; align-items: end; }
+  .p2 .drum { width: 190px; }
+  .lineup { columns: 2; column-gap: 28px; list-style: none; margin: 0 0 14px; padding: 0; }
+  .lineup li { break-inside: avoid; padding: 5px 0; border-bottom: 1px solid rgb(255 255 255/.22); font-size: 14px; color: var(--ink); }
+  .lineup span { display: block; font: 10px/1.4 "Fragment Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255/.7); }
+  .fmt { font-size: 14px; margin: 0; }
+  .fmt b { font: 10px "Fragment Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: rgb(255 255 255/.7); font-weight: 400; margin-right: 8px; }
+  .p2 .side { display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); min-height: 0; gap: 6px; padding: 6px 6px 6px 0; }
+
+  /* page 3 */
+  .p3 { display: grid; grid-template-columns: 1fr 380px; grid-template-rows: minmax(0, 1fr) auto; }
+  .p3 .arch { padding: 56px 40px 28px 56px; display: flex; flex-direction: column; }
+  .p3 .big { font-size: 64px; margin-bottom: 22px; }
+  .grid { flex: 1; display: grid; grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; min-height: 0; }
+  .grid a { position: relative; display: block; min-height: 0; overflow: hidden; }
+  .grid a:first-child { grid-row: span 2; }
+  .grid .ph { position: absolute; inset: 0; }
+  .grid .cap { position: absolute; left: 10px; bottom: 9px; z-index: 1; font: 10px "Fragment Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); background: rgb(12 4 4/.7); padding: 4px 7px; }
+  .play { position: absolute; z-index: 1; left: 50%; top: 50%; translate: -50% -50%; width: 56px; height: 56px; border-radius: 50%; background: var(--pink); color: var(--bg); display: grid; place-items: center; font-size: 18px; padding-left: 3px; }
+  .p3 .gigs { padding: 56px 56px 28px 0; }
+  .p3 h3 { font: 900 18px/1 "Archivo", sans-serif; font-stretch: 125%; text-transform: uppercase; margin: 0 0 12px; }
+  .p3 ul { list-style: none; margin: 0 0 26px; padding: 0; }
+  .p3 li { padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--ink); display: flex; justify-content: space-between; gap: 12px; }
+  .p3 li .mono { color: var(--muted); white-space: nowrap; font-size: 10px; }
+  .p3 .intro { font-size: 13px; margin-bottom: 10px; }
+  .contact { grid-column: 1 / -1; background: var(--pink); color: var(--bg); padding: 16px 56px; display: flex; align-items: center; gap: 22px; }
+  .contact img { width: 34px; }
+  .contact .mono { font-size: 11px; color: var(--bg); }
+  .contact a { border-bottom: 1px solid rgb(12 4 4/.4); }
+  .contact .r { margin-left: auto; }
+</style>
+</head>
+<body>
+
+<!-- 1 · cover + band -->
+<section class="pg p1">
+  <div class="cover">
+    <img src="{{ img }}lg/vientos-jardin.jpg" alt="" style="object-position:50% 30%">
+    <div class="cover__in">
+      <img src="{{ img }}logo.png" alt="">
+      <h1 class="big">La Senyal</h1>
+      <p>{{ t.tagline }}</p>
+    </div>
+  </div>
+  <div class="txt">
+    <p class="lab">01 / {{ t.pk_band }}</p>
+    <p class="lead">{{ t.intro }}</p>
+    <p>{{ t.intro2 }}</p>
+    <div class="how">
+      {%- for h in t.how %}
+      <div><b>0{{ forloop.index }}</b><h3>{{ h.t }}</h3><p>{{ h.d }}</p></div>
+      {%- endfor %}
+    </div>
+    <p class="note">{{ t.how_note }}</p>
+  </div>
+</section>
+
+<!-- 2 · live + line-up -->
+<section class="pg p2">
+  <div class="txt">
+    <p class="lab">02 / {{ t.pk_show }}</p>
+    <h2 class="big">{{ t.pk_show }}.</h2>
+    <p class="show">{{ t.pk_show_text }}</p>
+    <div class="row">
+      <img class="drum" src="{{ img }}tambor.png" alt="">
+      <div>
+        <p class="lab">{{ t.pk_lineup }}</p>
+        <ul class="lineup">
+          {%- for m in site.data.members %}
+          <li>{{ m.name }}<span>{{ t.roles[m.role] }}</span></li>
+          {%- endfor %}
+        </ul>
+        <p class="fmt"><b>{{ t.pk_formats_label }}</b>{{ t.pk_formats }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="side">
+    <img class="ph" src="{{ img }}sm/direccion-senas.jpg" alt="" style="object-position:50% 35%">
+    <img class="ph" src="{{ img }}sm/clarinete.jpg" alt="" style="object-position:50% 30%">
+  </div>
+</section>
+
+<!-- 3 · archive + concerts + contact -->
+<section class="pg p3">
+  <div class="arch">
+    <p class="lab">03 / {{ t.pk_archive }}</p>
+    <h2 class="big">{{ t.pk_archive }}.</h2>
+    <div class="grid">
+      <a href="{{ site.contact.video }}"><img class="ph" src="{{ img }}lg/la-nau.jpg" alt=""><span class="play">▶</span><span class="cap">{{ t.pk_video }} ↗</span></a>
+      <a href="{{ site.url }}{{ site.baseurl }}/assets/img/lg/grupo-jardin.jpg"><img class="ph" src="{{ img }}sm/grupo-jardin.jpg" alt=""><span class="cap">{{ t.pk_photo }} ↗</span></a>
+      <a href="{{ site.url }}{{ site.baseurl }}/assets/img/lg/generator.jpg"><img class="ph" src="{{ img }}sm/generator.jpg" alt=""><span class="cap">{{ t.pk_photo }} ↗</span></a>
+      <a href="{{ site.url }}{{ site.baseurl }}/assets/img/lg/vientos-directo.jpg"><img class="ph" src="{{ img }}sm/vientos-directo.jpg" alt=""><span class="cap">{{ t.pk_photo }} ↗</span></a>
+      <a href="{{ site.url }}{{ site.baseurl }}/assets/img/lg/absenta-direccion.jpg"><img class="ph" src="{{ img }}sm/absenta-direccion.jpg" alt="" style="object-position:50% 40%"><span class="cap">{{ t.pk_photo }} ↗</span></a>
+    </div>
+  </div>
+  <div class="gigs">
+    <p class="lab">{{ t.concerts_title }}</p>
+    {%- assign shown = 0 %}
+    <ul>
+      {%- for c in gigs -%}
+        {%- unless c.residency -%}{%- if shown < 4 -%}
+        {%- assign m1 = c.date | date: "%-m" | minus: 1 %}
+      <li>{{ c.venue }}<span class="mono">{{ c.date | date: "%-d" }} {{ t.months_short[m1] }} {{ c.date | date: "%Y" }}</span></li>
+        {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}{%- endunless -%}
+      {%- endfor %}
+    </ul>
+    <h3>{{ t.superlunes_title }}</h3>
+    <p class="intro">{{ t.superlunes_intro }}</p>
+    <ul>
+      {%- for c in gigs -%}{%- if c.residency %}
+        {%- assign m1 = c.date | date: "%-m" | minus: 1 -%}{%- assign m2 = c.end | date: "%-m" | minus: 1 %}
+      <li>{{ c.venue }}<span class="mono">{% if c.label %}{{ c.label }}{% else %}{{ t.months_short[m1] }}–{{ t.months_short[m2] }} {{ c.end | date: "%Y" }}{% endif %}</span></li>
+      {%- endif -%}{%- endfor %}
+    </ul>
+  </div>
+  <div class="contact">
+    <img src="{{ img }}logo.png" alt="">
+    <span class="mono">{{ t.booking }}</span>
+    <span class="mono"><a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a></span>
+    {%- for ph in site.contact.phones %}<span class="mono">{{ ph }}</span>{% endfor %}
+    <span class="mono"><a href="{{ site.contact.instagram }}">Instagram ↗</a></span>
+    <span class="mono r"><a href="{{ site.url }}{{ site.baseurl }}{{ L.pages.home }}">Web ↗</a> · Barcelona · {{ site.time | date: "%Y" }}</span>
+  </div>
+</section>
+
+</body>
+</html>

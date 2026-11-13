@@ -1,0 +1,74 @@
+meta_description: "La Senyal, a Barcelona percussion, horns and voice ensemble that improvises live, conducted with hand signs."
+skip: "Skip to content"
+
+nav:
+  home: Home
+  members: Members
+  concerts: Concerts
+
+tagline: "Real-time improvisation, conducted with hand signs."
+
+intro_label: "The band"
+intro: "La Senyal is a percussion, horns and voice ensemble from Barcelona. There is no set list: every concert is composed live, from the signs of whoever is conducting."
+intro2: "Afro-Latin rhythms —cumbia, candombe, salsa— crossed with funk and Balkan brass. For listening and, above all, for dancing."
+
+how_label: "How it works"
+how:
+  - t: "Signs"
+    d: "The conductor composes with hands and body: calling rhythms, entries, breaks and dynamics. The band answers on the spot."
+  - t: "Rotating conductors"
+    d: "Several musicians take turns conducting. Every night sounds different."
+  - t: "Guests"
+    d: "Guest musicians join every concert."
+how_note: "The sign language was created by Santiago Vázquez in Buenos Aires, with La Bomba de Tiempo."
+
+next_label: "Upcoming concerts"
+none_upcoming: "New dates coming soon."
+all_concerts: "All concerts"
+see_members: "Meet the band"
+watch: "Watch us live"
+gallery_label: "Live"
+
+members_title: "Members"
+members_intro: "Ten musicians. Three of them also conduct."
+
+concerts_title: "Concerts"
+upcoming: "Upcoming"
+past: "Past"
+superlunes_title: "Super Mondays"
+superlunes_intro: "Since 2024 we have played every Monday in weekly residencies: a place to try things, take risks and dance."
+every_monday: "Every Monday"
+map: "Map"
+info: "Info"
+
+contact: "Contact"
+booking: "Concerts, festivals and press"
+presskit: "Press kit (PDF)"
+lang_label: "Language"
+close: "Close"
+prev: "Previous"
+next: "Next"
+
+months: [January, February, March, April, May, June, July, August, September, October, November, December]
+months_short: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+
+roles:
+  perc_dir: "Percussion & conducting"
+  euph_dir: "Euphonium & conducting"
+  perc: "Percussion"
+  tenor: "Tenor sax"
+  alto: "Alto sax"
+  bari: "Baritone sax"
+  trumpet: "Trumpet"
+
+# Press kit
+pk_title: "Press kit"
+pk_band: "The band"
+pk_show: "Live"
+pk_show_text: "A La Senyal concert is a collective composition in real time. The conductor signs for a rhythm, a groove, a silence, a solo; the band turns it into music on the spot. The audience is dancing before long."
+pk_formats_label: "Formats"
+pk_formats: "Festivals, clubs, street parties, cultural events and celebrations. On stage or in the street."
+pk_archive: "Archive"
+pk_lineup: "Line-up"
+pk_video: "Live video"
+pk_photo: "Photo"

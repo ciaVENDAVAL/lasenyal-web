@@ -1,0 +1,28 @@
+{%- comment -%} One concert row. Needs: c (concert), t (texts). {%- endcomment -%}
+{%- assign c_start = include.c.date | date: "%Y-%m-%d" -%}
+{%- if include.c.end -%}{%- assign c_end = include.c.end | date: "%Y-%m-%d" -%}{%- else -%}{%- assign c_end = c_start -%}{%- endif -%}
+{%- assign m1 = include.c.date | date: "%-m" | minus: 1 -%}
+{%- assign y1 = include.c.date | date: "%Y" -%}
+<li class="gig{% if include.c.residency %} gig--res{% endif %}" data-end="{{ c_end }}">
+  <time class="gig__date" datetime="{{ c_start }}">
+    {%- if include.c.label -%}
+      <span class="gig__day">{{ include.c.label }}</span>
+    {%- elsif include.c.residency and include.c.end -%}
+      {%- assign m2 = include.c.end | date: "%-m" | minus: 1 -%}
+      {%- assign y2 = include.c.end | date: "%Y" -%}
+      <span class="gig__day gig__day--range">{{ include.t.months_short[m1] }}–{{ include.t.months_short[m2] }}</span>
+      <span class="gig__month">{{ y2 }}</span>
+    {%- else -%}
+      <span class="gig__day">{{ include.c.date | date: "%d" }}</span>
+      <span class="gig__month">{{ include.t.months_short[m1] }} {{ y1 }}</span>
+    {%- endif -%}
+  </time>
+  <div class="gig__what">
+    <h3>{{ include.c.venue }}</h3>
+    <p>{{ include.c.place }}{% if include.c.time %} · {{ include.c.time }}{% endif %}{% if include.c.residency %} · {{ include.t.every_monday }}{% endif %}</p>
+  </div>
+  <p class="gig__links">
+    {%- if include.c.map %}<a href="{{ include.c.map }}" rel="noopener">{{ include.t.map }} ↗</a>{% endif -%}
+    {%- if include.c.link %}<a href="{{ include.c.link }}" rel="noopener">{{ include.t.info }} ↗</a>{% endif -%}
+  </p>
+</li>
