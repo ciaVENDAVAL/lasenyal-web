@@ -84,3 +84,6 @@ a11y:
   smaller: "Smaller text"
   bigger: "Larger text"
   reset: "Reset"
+
+menu: "Menu"
+close_menu: "Close menu"

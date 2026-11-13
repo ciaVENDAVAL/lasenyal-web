@@ -38,17 +38,26 @@
       <img src="{{ '/assets/img/logo.png' | relative_url }}" alt="" width="40" height="40">
       <span>La Senyal</span>
     </a>
-    <nav class="nav" aria-label="Menu">
-      {%- assign navkeys = "members,concerts" | split: "," -%}
-      {%- for k in navkeys %}
-      <a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a>
-      {%- endfor %}
-    </nav>
-    <nav class="langs" aria-label="{{ t.lang_label }}">
-      {%- for l in site.languages %}
-      <a href="{{ l.pages[page.ref] | relative_url }}" hreflang="{{ l.code }}" lang="{{ l.code }}" title="{{ l.name }}"{% if l.code == page.lang %} aria-current="true"{% endif %}>{{ l.label }}</a>
-      {%- endfor %}
-    </nav>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+      <span class="menu-btn__bars" aria-hidden="true"><i></i><i></i></span>
+      <span class="sr" data-open="{{ t.menu }}" data-close="{{ t.close_menu }}">{{ t.menu }}</span>
+    </button>
+    <div class="menu" id="menu" hidden>
+      <nav aria-label="{{ t.menu }}">
+        <ol class="menu__list">
+          {%- assign navkeys = "home,members,concerts" | split: "," -%}
+          {%- for k in navkeys %}
+          <li><a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a></li>
+          {%- endfor %}
+        </ol>
+      </nav>
+      <div class="menu__langs" role="group" aria-label="{{ t.lang_label }}">
+        {%- for l in site.languages %}
+        <a href="{{ l.pages[page.ref] | relative_url }}" hreflang="{{ l.code }}" lang="{{ l.code }}"{% if l.code == page.lang %} aria-current="true"{% endif %}><b>{{ l.label }}</b>{{ l.name }}</a>
+        {%- endfor %}
+      </div>
+      <p class="menu__foot"><a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a><a href="{{ site.docs_base }}lasenyal-presskit-{{ page.lang }}.pdf">{{ t.presskit }} ↓</a></p>
+    </div>
   </header>
 
   <main id="main">

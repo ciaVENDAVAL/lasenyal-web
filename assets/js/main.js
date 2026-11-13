@@ -1,5 +1,21 @@
 // La Senyal — small helpers, no dependencies.
 (() => {
+  // 0. Menu (top right): opens a panel from the button.
+  const menuBtn = document.querySelector(".menu-btn"), menu = document.getElementById("menu");
+  if (menuBtn && menu) {
+    const lbl = menuBtn.querySelector(".sr");
+    const isOpen = () => menuBtn.getAttribute("aria-expanded") === "true";
+    const setMenu = open => {
+      menuBtn.setAttribute("aria-expanded", String(open));
+      lbl.textContent = open ? lbl.dataset.close : lbl.dataset.open;
+      if (open) { menu.hidden = false; requestAnimationFrame(() => { menu.classList.add("is-open"); requestAnimationFrame(() => menu.querySelector("a").focus({ preventScroll: true })); }); }
+      else { menu.classList.remove("is-open"); setTimeout(() => { if (!menu.classList.contains("is-open")) menu.hidden = true; }, 600); }
+    };
+    menuBtn.addEventListener("click", e => { e.stopPropagation(); setMenu(!isOpen()); });
+    document.addEventListener("click", e => { if (isOpen() && !e.target.closest("#menu")) setMenu(false); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && isOpen()) { setMenu(false); menuBtn.focus(); } });
+  }
+
   // 1. Concerts: the page is built on GitHub, so it only knows the date of the last build.
   //    Here we move any concert whose day has passed from "upcoming" to "past".
   const pad = n => String(n).padStart(2, "0");
