@@ -113,6 +113,6 @@
   </div>
   <script src="{{ '/assets/js/main.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
   {%- comment -%} Edit on the page: add #edit to any address (or use "Edit on the page" in the admin). {%- endcomment %}
-  <script>try{if(location.hash==="#edit"||sessionStorage.getItem("ls-edit")){sessionStorage.setItem("ls-edit","1");window.LS_EDIT={base:"{{ site.baseurl }}",lang:"{{ page.lang | default: 'es' }}",repo:"ciaVENDAVAL/lasenyal-web",branch:"main"};var s=document.createElement("script");s.type="module";s.src="{{ '/assets/js/edit.js' | relative_url }}?v={{ site.time | date: '%s' }}";document.body.appendChild(s)}}catch(e){}</script>
+  <script>try{if(location.hash==="#edit"||sessionStorage.getItem("ls-edit")){sessionStorage.setItem("ls-edit","1");window.LS_EDIT={base:"{{ site.baseurl }}",lang:"{{ page.lang | default: 'es' }}",repo:"ciaVENDAVAL/lasenyal-web",branch:"main"};var s=document.createElement("script");s.type="module";s.src="{{ '/assets/js/edit.js' | relative_url }}?v={{ site.time | date: '%s' }}";document.body.appendChild(s)}else addEventListener("hashchange",function(){if(location.hash==="#edit")location.reload()})}catch(e){}</script>
 </body>
 </html>
