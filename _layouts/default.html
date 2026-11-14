@@ -40,7 +40,7 @@
     </a>
     <div class="top__links">
       <nav class="nav" aria-label="{{ t.menu }}">
-        {%- assign navkeys = "members,concerts,hands" | split: "," -%}
+        {%- assign navkeys = "concerts" | split: "," -%}
         {%- for k in navkeys %}
         <a href="{{ L.pages[k] | relative_url }}"{% if page.ref == k %} aria-current="page"{% endif %}>{{ t.nav[k] }}</a>
         {%- endfor %}
