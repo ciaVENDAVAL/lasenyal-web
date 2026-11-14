@@ -26,7 +26,9 @@ The booking email and phones in `_data/site.yml` are the band's public contact, 
   ≤ 15–20 pages, ≤ 3 MB. Don't rebuild a PDF whose text hasn't changed.
 
 ## Languages
-CA · ES · EN, always all three and consistent. Tell tyle when something exists in one language and not the others.
+CA · ES · EN, always all three and consistent. A text changed in only ONE language is auto-translated into the
+other two by DeepL after the push (`tools/translate.py`); when you translate by hand, change all three in the same
+commit (or add `[no-translate]` to the message). Tell tyle when something exists in one language and not the others.
 ES is at the root (`/`), CA at `/ca/`, EN at `/en/`.
 
 ## Photos

@@ -13,9 +13,9 @@ const SKIP_KEYS = new Set(["photo", "f", "o", "map", "link", "role", "date", "en
 const TEXT_FILES = () => [`_data/i18n/${CFG.lang}.yml`, "_data/members.yml", "_data/concerts.yml", "_data/site.yml", "_data/gallery.yml", "_data/downloads.yml"];
 
 const T = {
-  ca: { bar: "Editant", changes: n => n === 1 ? "1 canvi" : `${n} canvis`, publish: "Publica", exit: "Surt", photos: "Fotos", help: "Toca un text per canviar-lo. Toca una foto o un enllaç PDF per substituir-lo. Després, «Publica».", tokenTitle: "Inicia sessió", tokenText: "Enganxa el teu token de GitHub (el mateix de l'admin).", save: "Desa", cancel: "Cancel·la", replacePhoto: "Tria una foto nova", replacePdf: "Tria un PDF nou", usedIn: "S'usa a", photoNote: "La foto nova substitueix aquesta a tot el web (mateix nom de fitxer). La còpia petita es fa sola.", pdfNote: "El PDF nou es desa com a", places: "Aquest text és a diversos llocs. Canvia'l a:", publishing: "Publicant…", published: "Publicat! Es veurà al web en 1–2 minuts.", error: "No s'ha pogut publicar", leave: "Tens canvis sense publicar.", none: "Res a publicar.", close: "Tanca", noPhotos: "No hi ha fotos en aquesta pàgina." },
-  es: { bar: "Editando", changes: n => n === 1 ? "1 cambio" : `${n} cambios`, publish: "Publicar", exit: "Salir", photos: "Fotos", help: "Toca un texto para cambiarlo. Toca una foto o un enlace PDF para sustituirlo. Después, «Publicar».", tokenTitle: "Iniciar sesión", tokenText: "Pega tu token de GitHub (el mismo del admin).", save: "Guardar", cancel: "Cancelar", replacePhoto: "Elegir foto nueva", replacePdf: "Elegir PDF nuevo", usedIn: "Se usa en", photoNote: "La foto nueva sustituye a esta en toda la web (mismo nombre de archivo). La copia pequeña se hace sola.", pdfNote: "El PDF nuevo se guarda como", places: "Este texto está en varios sitios. Cámbialo en:", publishing: "Publicando…", published: "¡Publicado! Se verá en la web en 1–2 minutos.", error: "No se ha podido publicar", leave: "Tienes cambios sin publicar.", none: "Nada que publicar.", close: "Cerrar", noPhotos: "No hay fotos en esta página." },
-  en: { bar: "Editing", changes: n => n === 1 ? "1 change" : `${n} changes`, publish: "Publish", exit: "Exit", photos: "Photos", help: "Tap a text to change it. Tap a photo or a PDF link to replace it. Then “Publish”.", tokenTitle: "Sign in", tokenText: "Paste your GitHub token (the same one as in the admin).", save: "Save", cancel: "Cancel", replacePhoto: "Choose a new photo", replacePdf: "Choose a new PDF", usedIn: "Used in", photoNote: "The new photo replaces this one everywhere on the site (same file name). The small copy is made automatically.", pdfNote: "The new PDF is saved as", places: "This text is in several places. Change it in:", publishing: "Publishing…", published: "Published! It will show on the site in 1–2 minutes.", error: "Could not publish", leave: "You have unpublished changes.", none: "Nothing to publish.", close: "Close", noPhotos: "No photos on this page." },
+  ca: { bar: "Editant", changes: n => n === 1 ? "1 canvi" : `${n} canvis`, publish: "Publica", exit: "Surt", photos: "Fotos", help: "Toca un text per canviar-lo. Toca una foto o un enllaç PDF per substituir-lo. Després, «Publica».", tokenTitle: "Inicia sessió", tokenText: "Enganxa el teu token de GitHub (el mateix de l'admin).", save: "Desa", cancel: "Cancel·la", replacePhoto: "Tria una foto nova", replacePdf: "Tria un PDF nou", usedIn: "S'usa a", photoNote: "La foto nova substitueix aquesta a tot el web (mateix nom de fitxer). La còpia petita es fa sola.", pdfNote: "El PDF nou es desa com a", places: "Aquest text és a diversos llocs. Canvia'l a:", publishing: "Publicant…", published: "Publicat! Es veurà al web en 1–2 minuts.", error: "No s'ha pogut publicar", leave: "Tens canvis sense publicar.", none: "Res a publicar.", close: "Tanca", noPhotos: "No hi ha fotos en aquesta pàgina.", translate: "Tradueix", translateHint: "Els textos canviats en un idioma es tradueixen sols als altres (DeepL). Desmarca-ho per corregir només aquest idioma.", translating: "Els altres idiomes es tradueixen sols en uns minuts." },
+  es: { bar: "Editando", changes: n => n === 1 ? "1 cambio" : `${n} cambios`, publish: "Publicar", exit: "Salir", photos: "Fotos", help: "Toca un texto para cambiarlo. Toca una foto o un enlace PDF para sustituirlo. Después, «Publicar».", tokenTitle: "Iniciar sesión", tokenText: "Pega tu token de GitHub (el mismo del admin).", save: "Guardar", cancel: "Cancelar", replacePhoto: "Elegir foto nueva", replacePdf: "Elegir PDF nuevo", usedIn: "Se usa en", photoNote: "La foto nueva sustituye a esta en toda la web (mismo nombre de archivo). La copia pequeña se hace sola.", pdfNote: "El PDF nuevo se guarda como", places: "Este texto está en varios sitios. Cámbialo en:", publishing: "Publicando…", published: "¡Publicado! Se verá en la web en 1–2 minutos.", error: "No se ha podido publicar", leave: "Tienes cambios sin publicar.", none: "Nada que publicar.", close: "Cerrar", noPhotos: "No hay fotos en esta página.", translate: "Traducir", translateHint: "Los textos cambiados en un idioma se traducen solos a los demás (DeepL). Desmárcalo para corregir solo este idioma.", translating: "Los otros idiomas se traducen solos en unos minutos." },
+  en: { bar: "Editing", changes: n => n === 1 ? "1 change" : `${n} changes`, publish: "Publish", exit: "Exit", photos: "Photos", help: "Tap a text to change it. Tap a photo or a PDF link to replace it. Then “Publish”.", tokenTitle: "Sign in", tokenText: "Paste your GitHub token (the same one as in the admin).", save: "Save", cancel: "Cancel", replacePhoto: "Choose a new photo", replacePdf: "Choose a new PDF", usedIn: "Used in", photoNote: "The new photo replaces this one everywhere on the site (same file name). The small copy is made automatically.", pdfNote: "The new PDF is saved as", places: "This text is in several places. Change it in:", publishing: "Publishing…", published: "Published! It will show on the site in 1–2 minutes.", error: "Could not publish", leave: "You have unpublished changes.", none: "Nothing to publish.", close: "Close", noPhotos: "No photos on this page.", translate: "Translate", translateHint: "Texts changed in one language are translated into the others (DeepL). Untick to fix only this language.", translating: "The other languages are translated automatically in a few minutes." },
 }[CFG.lang] || {};
 
 /* ---------- state ---------- */
@@ -32,7 +32,40 @@ const repoPath = url => {
   if (CFG.base && p.startsWith(CFG.base + "/")) p = p.slice(CFG.base.length);
   return decodeURIComponent(p);
 };
-const count = () => textEdits.size + binEdits.size + spans.filter(x => x.changed).length;
+const count = () => textEdits.size + binEdits.size;
+
+/* ---------- pending changes survive moving to another page or language (until Publish or Exit) ---------- */
+const PENDING = "ls-edit-pending";
+function saveTexts() { try { sessionStorage.setItem(PENDING, JSON.stringify([...textEdits.values()])); } catch (e) {} }
+function idb() {
+  return new Promise((res, rej) => { const r = indexedDB.open("ls-edit", 1); r.onupgradeneeded = () => r.result.createObjectStore("files"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+}
+async function idbDo(fn) { try { const db = await idb(); return await new Promise((res, rej) => { const tx = db.transaction("files", "readwrite"); const st = tx.objectStore("files"); const out = fn(st); tx.oncomplete = () => res(out && out.result); tx.onerror = () => rej(tx.error); }); } catch (e) { console.warn("edit: storage", e); } }
+const saveBin = (path, file) => idbDo(st => st.put(file, path));
+const clearPending = () => { try { sessionStorage.removeItem(PENDING); } catch (e) {} return idbDo(st => st.clear()); };
+async function restorePending() {
+  try { for (const e of JSON.parse(sessionStorage.getItem(PENDING) || "[]")) textEdits.set(key(e.file, e.path), e); } catch (e) {}
+  for (const s of spans) {
+    const hit = s.candidates.map(c => textEdits.get(key(c.file, c.path))).find(Boolean);
+    if (hit) { s.span.textContent = hit.value; s.value = hit.value; s.span.classList.add("ls-changed"); }
+  }
+  const paths = await idbDo(st => st.getAllKeys()) || [];
+  for (const p of paths) { const f = await idbDo(st => st.get(p)); if (f) { binEdits.set(p, { file: f, url: URL.createObjectURL(f) }); showBin(p); } }
+}
+function showBin(path) {
+  const { url } = binEdits.get(path), name = path.split("/").pop();
+  if (path.startsWith("/pdf/")) { document.querySelectorAll("a.ls-pdf").forEach(a => { const i = pdfInfo(a); if (i && textEdits.get(key("_data/downloads.yml", [i.kind, i.lang]))?.value === path) { a.classList.add("ls-changed"); a.dataset.lsNew = url; } }); return; }
+  document.querySelectorAll("img").forEach(i => { if ((i.currentSrc || i.src).split("/").pop().split("?")[0] === name) { i.src = url; i.srcset = ""; i.classList.add("ls-changed"); } });
+  document.querySelectorAll("[data-lg], a[href]").forEach(a => { if ((a.dataset.lg || "").endsWith("/" + name)) a.dataset.lg = url; if (a.getAttribute("href")?.endsWith("/" + name)) a.href = url; });
+}
+// a text span's edit goes to the places ticked for it
+function applySpan(s) {
+  for (const k of s.keys || []) textEdits.delete(k);
+  s.keys = [];
+  if (s.changed) for (const c of s.chosen) { const k = key(c.file, c.path); textEdits.set(k, { file: c.file, path: c.path, value: s.value }); s.keys.push(k); }
+  saveTexts();
+}
+const translateOn = () => { try { return sessionStorage.getItem("ls-edit-translate") !== "0"; } catch (e) { return true; } };
 
 /* ---------- GitHub ---------- */
 function getToken() {
@@ -138,7 +171,7 @@ function onBlurText(s) {
   if (!v) { s.span.textContent = s.value; return; }
   if (v === s.value) return;
   s.value = v; s.changed = true; s.span.classList.add("ls-changed");
-  mirror(s); update();
+  applySpan(s); mirror(s); update();
 }
 // show the new text in the other spots that use the same chosen places (the places are decided at Publish)
 const same = (a, b) => a.file === b.file && JSON.stringify(a.path) === JSON.stringify(b.path);
@@ -156,7 +189,7 @@ function showPlaces(s) {
   placesBox = el("div", { class: "ls-places" }, [el("p", {}, T.places)]);
   s.candidates.forEach(c => {
     const cb = el("input", { type: "checkbox" }); cb.checked = s.chosen.includes(c);
-    cb.addEventListener("change", () => { s.chosen = s.candidates.filter((x, i) => placesBox.querySelectorAll("input")[i].checked); if (!s.chosen.length) { s.chosen = [c]; cb.checked = true; } mirror(s); update(); });
+    cb.addEventListener("change", () => { s.chosen = s.candidates.filter((x, i) => placesBox.querySelectorAll("input")[i].checked); if (!s.chosen.length) { s.chosen = [c]; cb.checked = true; } applySpan(s); mirror(s); update(); });
     cb.addEventListener("mousedown", e => e.preventDefault());
     placesBox.append(el("label", {}, [cb, " " + label(c)]));
   });
@@ -183,12 +216,8 @@ function photoDialog(img) {
   ]);
   input.addEventListener("change", () => {
     const f = input.files[0]; if (!f) return;
-    const url = URL.createObjectURL(f);
-    binEdits.set(path, { file: f, url });
-    const name = path.split("/").pop();
-    document.querySelectorAll("img").forEach(i => { if ((i.currentSrc || i.src).split("/").pop().split("?")[0] === name) { i.src = url; i.srcset = ""; i.classList.add("ls-changed"); } });
-    document.querySelectorAll("[data-lg], a[href]").forEach(a => { if ((a.dataset.lg || "").endsWith("/" + name)) a.dataset.lg = url; if (a.getAttribute("href")?.endsWith("/" + name)) a.href = url; });
-    update(); d.close();
+    binEdits.set(path, { file: f, url: URL.createObjectURL(f) }); saveBin(path, f);
+    showBin(path); update(); d.close();
   });
 }
 function pdfDialog(a) {
@@ -209,11 +238,9 @@ function pdfDialog(a) {
   d.addEventListener("close", saveText);
   input.addEventListener("change", () => {
     const f = input.files[0]; if (!f) return;
-    const url = URL.createObjectURL(f);
-    binEdits.set(target, { file: f, url });
-    textEdits.set(key("_data/downloads.yml", [info.kind, info.lang]), { file: "_data/downloads.yml", path: [info.kind, info.lang], value: target });
-    document.querySelectorAll("a.ls-pdf").forEach(x => { const i = pdfInfo(x); if (i && i.kind === info.kind && i.lang === info.lang) { x.classList.add("ls-changed"); x.dataset.lsNew = url; } });
-    update(); d.close();
+    binEdits.set(target, { file: f, url: URL.createObjectURL(f) }); saveBin(target, f);
+    textEdits.set(key("_data/downloads.yml", [info.kind, info.lang]), { file: "_data/downloads.yml", path: [info.kind, info.lang], value: target }); saveTexts();
+    showBin(target); update(); d.close();
   });
 }
 function photosDialog() {
@@ -232,7 +259,6 @@ async function publish() {
     const baseTree = (await (await gh(`/git/commits/${parent}`)).json()).tree.sha;
     const tree = [];
     const byFile = {};
-    for (const x of spans) if (x.changed) for (const c of x.chosen) textEdits.set(key(c.file, c.path), { file: c.file, path: c.path, value: x.value });
     for (const e of textEdits.values()) (byFile[e.file] ||= []).push(e);
     for (const [file, edits] of Object.entries(byFile)) {
       const doc = parseDocument(await readFile(file, parent));   // fresh copy: keeps edits made meanwhile in the admin
@@ -252,17 +278,17 @@ async function publish() {
     }
     const newTree = await (await gh("/git/trees", { method: "POST", body: JSON.stringify({ base_tree: baseTree, tree: tree.map(t => ({ path: t.path, mode: "100644", type: "blob", sha: t.sha })) }) })).json();
     const files = tree.map(t => t.path.split("/").pop()).join(", ");
-    const commit = await (await gh("/git/commits", { method: "POST", body: JSON.stringify({ message: `Edit on page (${location.pathname.replace(CFG.base, "") || "/"}): ${files}`, tree: newTree.sha, parents: [parent] }) })).json();
+    const commit = await (await gh("/git/commits", { method: "POST", body: JSON.stringify({ message: `Edit on page: ${files}${translateOn() ? "" : " [no-translate]"}`, tree: newTree.sha, parents: [parent] }) })).json();
     await gh(`/git/refs/heads/${CFG.branch}`, { method: "PATCH", body: JSON.stringify({ sha: commit.sha }) });
-    textEdits.clear(); binEdits.clear(); spans.forEach(x => { x.changed = false; });
+    const hadTexts = [...textEdits.values()].some(e => e.file.startsWith("_data/i18n/"));
+    textEdits.clear(); binEdits.clear(); spans.forEach(x => { x.changed = false; x.keys = []; }); await clearPending();
     document.querySelectorAll(".ls-changed").forEach(x => x.classList.remove("ls-changed"));
     for (const f of Object.keys(byFile)) { const text = await readFile(f, commit.sha); sources[f] = { text, data: parseDocument(text).toJS() }; }
-    toast(T.published, 8000);
+    toast(T.published + (hadTexts && translateOn() ? " " + T.translating : ""), 9000);
   } catch (e) {
     console.error(e); toast(`${T.error}: ${e.message}`, 12000);
-    for (const [k, e2] of [...textEdits]) if (e2.file !== "_data/downloads.yml") textEdits.delete(k); // rebuilt from the texts next time
   }
-  b.disabled = false; b.textContent = T.publish; update();
+  b.disabled = false; update();
 }
 
 /* ---------- UI ---------- */
@@ -281,8 +307,16 @@ function dialog(kids) {
   return d;
 }
 function toast(msg, ms = 4000) { const t = el("div", { class: "ls-toast", role: "status" }, msg); ui.append(t); setTimeout(() => t.remove(), ms); }
+function trSwitch() {
+  const cb = el("input", { type: "checkbox" }); cb.checked = translateOn();
+  cb.addEventListener("change", () => { try { sessionStorage.setItem("ls-edit-translate", cb.checked ? "1" : "0"); } catch (e) {} });
+  return el("label", { class: "ls-switch", title: T.translateHint }, [cb, " " + T.translate]);
+}
 let ui;
-function update() { ui.querySelector(".ls-count").textContent = T.changes(count()); ui.classList.toggle("ls-dirty", count() > 0); }
+function update() {
+  ui.querySelector(".ls-count").textContent = T.changes(count()); ui.classList.toggle("ls-dirty", count() > 0);
+  const b = ui.querySelector(".ls-publish"); if (b && !b.disabled) b.textContent = T.publish + (count() ? ` (${count()})` : "");
+}
 function buildUI() {
   ui = el("div", { id: "ls-edit-ui", lang: CFG.lang });
   ui.append(el("style", {}, `
@@ -297,7 +331,9 @@ function buildUI() {
     #ls-edit-ui{font:15px/1.4 system-ui,sans-serif;color:#fff}
     #ls-edit-ui .ls-bar{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#1d1416;border-top:2px solid #e675b5;box-shadow:0 -6px 20px rgb(0 0 0/.4)}
     #ls-edit-ui .ls-title{font-weight:700;margin-right:auto}
-    @media (max-width:520px){#ls-edit-ui .ls-bar{gap:6px;padding-inline:8px}#ls-edit-ui .ls-bar .ls-btn{padding:8px 11px}#ls-edit-ui .ls-word{display:none}}
+    #ls-edit-ui .ls-switch{display:flex;align-items:center;gap:4px;font-size:14px;min-height:44px;cursor:pointer}
+    #ls-edit-ui .ls-switch input{width:20px;height:20px;accent-color:#e675b5}
+    @media (max-width:520px){#ls-edit-ui .ls-bar{gap:6px;padding-inline:8px;justify-content:space-between}#ls-edit-ui .ls-bar .ls-btn{padding:8px 11px}#ls-edit-ui .ls-title,#ls-edit-ui .ls-count{display:none}}
     #ls-edit-ui .ls-count{opacity:.75}
     #ls-edit-ui.ls-dirty .ls-count{opacity:1;color:#3ddc84}
     #ls-edit-ui .ls-btn{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid rgb(255 255 255/.35);background:transparent;color:#fff;cursor:pointer;min-height:44px}
@@ -321,7 +357,8 @@ function buildUI() {
   const bar = el("div", { class: "ls-bar" }, [
     el("span", { class: "ls-title" }, ["✎ ", el("span", { class: "ls-word" }, T.bar)]), el("span", { class: "ls-count" }, T.changes(0)),
     btn(T.photos, photosDialog), Object.assign(btn(T.publish, publish, true), { className: "ls-btn ls-primary ls-publish" }),
-    btn(T.exit, () => { if (count() && !confirm(T.leave)) return; sessionStorage.removeItem("ls-edit"); location.hash = ""; location.reload(); }),
+    trSwitch(),
+    Object.assign(btn("✕", async () => { if (count() && !confirm(T.leave)) return; await clearPending(); sessionStorage.removeItem("ls-edit"); location.hash = ""; location.reload(); }), { title: T.exit, ariaLabel: T.exit }),
   ]);
   ui.append(bar);
   document.body.append(ui);
@@ -337,7 +374,7 @@ document.addEventListener("click", e => {
   const img = e.target.closest("img.ls-img");
   if (img) { e.preventDefault(); e.stopPropagation(); photoDialog(img); }
 }, true);
-window.addEventListener("beforeunload", e => { if (count()) { e.preventDefault(); e.returnValue = T.leave; } });
+
 
 async function askToken() {
   return new Promise(res => {
@@ -359,6 +396,6 @@ async function askToken() {
   if (!token) return;
   try { if (!getToken()) localStorage.setItem("ls-edit-token", token); } catch (e) {}
   await load();
-  markTexts(); markMedia();
+  markTexts(); markMedia(); await restorePending(); update();
   if (!sessionStorage.getItem("ls-edit-help")) { toast(T.help, 7000); sessionStorage.setItem("ls-edit-help", "1"); }
 })();

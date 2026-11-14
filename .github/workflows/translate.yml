@@ -1,0 +1,46 @@
+# Change one language, the others follow: texts changed in only one language are translated
+# into the other two with DeepL (tools/translate.py). Needs the repository secret DEEPL_API_KEY.
+# Put [no-translate] in a commit message to skip (the on-page editor does it when its switch is off).
+name: Translate
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_data/i18n/**"
+      - "_extra/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency: translate
+jobs:
+  translate:
+    if: ${{ !contains(github.event.head_commit.message, '[no-translate]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruamel.yaml
+      - name: Translate
+        env:
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+          BEFORE: ${{ github.event.before }}
+          TRANSLATED_LIST: /tmp/translated.txt
+        run: |
+          if [ -z "$DEEPL_API_KEY" ]; then echo "::warning::No DEEPL_API_KEY secret: nothing translated"; exit 0; fi
+          if [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE" 2>/dev/null; then BEFORE=HEAD~1; fi
+          python tools/translate.py "$BEFORE"
+      - name: Commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add _data/i18n _extra
+          if git diff --cached --quiet; then echo "Nothing translated"; exit 0; fi
+          { echo "Auto-translate (DeepL) — please check"; echo; cat /tmp/translated.txt; } > /tmp/msg.txt
+          git -c user.name="translate bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -F /tmp/msg.txt
+          git pull --rebase origin main && git push
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

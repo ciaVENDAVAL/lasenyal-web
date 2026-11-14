@@ -18,3 +18,14 @@ spelling:
 
 # Words not to use (house style) — none decided yet.
 banned: []
+
+# Auto-translation (tools/translate.py, DeepL): never translated, kept exactly as written.
+do_not_translate:
+  - La Senyal
+  - La Bomba de Tiempo
+  - Santiago Vázquez
+  - Buenos Aires
+  - Barcelona
+# Same idea, but each language has its own form.
+terms:
+  - { ca: Superdilluns, es: Superlunes, en: Super Mondays }

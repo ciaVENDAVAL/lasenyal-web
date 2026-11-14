@@ -26,6 +26,11 @@ the menu (`_data/menu.yml`), contact/footer/main photos (`_data/site.yml`) and c
   (loaded only in edit mode) matches each visible text to the YAML in `_data/` by its exact wording, makes it
   editable, lets you replace photos (same file name, so every use changes) and PDFs (new dated file + `downloads.yml`),
   and publishes everything as one commit through the GitHub API with the admin's token.
+- **Change one language, the others follow:** `.github/workflows/translate.yml` (`tools/translate.py`) translates
+  every text changed in only one language (`_data/i18n/`, `_extra/`) into the other two with DeepL and commits
+  "Auto-translate (DeepL) — please check". Needs the repo secret `DEEPL_API_KEY`. Names that must not be translated
+  and per-language terms: `tools/facts.yml`. `[no-translate]` in a commit message skips it (the on-page editor's
+  "Translate" switch).
 - **Extra pages** use `_layouts/page.html`; their address is `/<name>/` (ES), `/ca/<name>/`, `/en/<name>/`.
 - If you add or rename keys in `_data/i18n/*.yml`, regenerate the admin form: in `lasenyal-admin`,
   `python3 scripts/make_config.py ../lasenyal-web web/config.yml`.
