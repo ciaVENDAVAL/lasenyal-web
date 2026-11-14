@@ -1,6 +1,6 @@
 // Mans / Manos / Hands — a hand-rhythm game for La Senyal.
-// Based on "Mans — VENDAVAL" v3. Two pairs of hands, thumbs outward; each finger = one eighth note.
-// Finger up = that hand's instrument plays, folded = rest. Both pairs play the same bar together.
+// Based on "Mans — VENDAVAL" v3. Two hands, thumbs outward; each finger = one eighth note.
+// Finger up = that hand's instrument plays, folded = rest. Each hand picks its instrument.
 // Sections: hands, rhythm, volume (open-palm faders), break (a soloist improvises one bar).
 // Everything is scoped to #mans; no storage, no network. The groove lives in the URL hash.
 (() => {
@@ -53,17 +53,16 @@
   const rName = k => (T.rhythms && T.rhythms[k]) || RHYTHMS[k].name;
 
   /* ---------- state ---------- */
-  // pattern[0..1] = first pair (left, right), pattern[2..3] = second pair. Fingers in on-screen order.
-  let pattern = [
-    { fingers: [1, 0, 1, 1], art: "normal", inst: "trumpet" }, { fingers: [0, 1, 1, 0], art: "normal", inst: "trumpet" },
-    { fingers: [1, 1, 0, 1], art: "normal", inst: "djembe" },  { fingers: [0, 1, 0, 1], art: "sustain", inst: "sax" }];
+  // pattern[0] = left hand, pattern[1] = right hand. Fingers in on-screen order.
+  const SETS = [0];   // one pair of hands (the code still supports more: add sets here)
+  let pattern = [{ fingers: [1, 0, 1, 1], art: "normal", inst: "trumpet" }, { fingers: [0, 1, 1, 0], art: "normal", inst: "sax" }];
   const handOf = (set, idx) => set * 2 + (idx >> 2);
   let curKey = "salsa", cur = RHYTHMS[curKey], curLanes = [], claveMode = "32", bpm = cur.bpm;
   let drumsOn = true, handsOn = true;
   let playing = false, step = 0, nextTime = 0, timer = null, raf = null, uiQ = [], prevStep = -1;
 
-  // volumes 0..1 (palm faders): drums, the four hands, soloist
-  const vol = { d: 0.8, h: [0.8, 0.8, 0.8, 0.8], s: 0.9 };
+  // volumes 0..1 (palm faders): drums, each hand, soloist
+  const vol = { d: 0.8, h: [0.8, 0.8], s: 0.9 };
 
   // break: idle -> armed (waits for the next bar) -> solo (one bar) -> idle
   let soloist = "trumpet", brk = "idle", soloNotes = [], soloPos = 0;
@@ -92,7 +91,7 @@
     master = ac.createGain(); master.gain.value = 0.66;
     master.connect(comp).connect(ac.destination);
     const ch = () => { const g = ac.createGain(); g.connect(master); return g; };
-    chDrums = ch(); chHands = [ch(), ch(), ch(), ch()]; chSolo = ch();
+    chDrums = ch(); chHands = pattern.map(() => ch()); chSolo = ch();
     applyVol(true);
     noiseBuf = ac.createBuffer(1, Math.floor(ac.sampleRate * 0.25), ac.sampleRate);
     const d = noiseBuf.getChannelData(0);
@@ -309,20 +308,20 @@
       if (brk === "armed" && mode !== "take") { brk = "solo"; soloNotes = makeSolo(soloist, Tn); soloPos = 0; }
     }
 
-    let inBreak = false, soloNote = null, notes = [null, null];
+    let inBreak = false, soloNote = null, notes = [];
     if (mode === "take") {
       const st = take.steps[takePos];
       inBreak = !!st.brk; soloNote = st.solo || null;
-      if (!inBreak) notes = [takeNote(0, takePos), takeNote(1, takePos)];
+      if (!inBreak) notes = SETS.map(set => takeNote(set, takePos));
       ui.take = takePos; if (inBreak) ui.solo = st.soloist;
       takePos = (takePos + 1) % take.steps.length;
     } else {
       if (brk === "solo") {
         inBreak = true; soloNote = soloNotes[soloPos]; ui.solo = soloist;
         soloPos++; if (soloPos >= Tn) { brk = "idle"; ui.brkEnd = true; }
-      } else notes = [liveNote(0, idx), liveNote(1, idx)];
+      } else notes = SETS.map(set => liveNote(set, idx));
       if (mode === "rec") {
-        const entry = [0, 1].map(set => { const h = handOf(set, idx), p = pattern[h]; return { on: !!p.fingers[idx & 3], art: p.art, inst: p.inst, h }; });
+        const entry = SETS.map(set => { const h = handOf(set, idx), p = pattern[h]; return { on: !!p.fingers[idx & 3], art: p.art, inst: p.inst, h }; });
         if (inBreak) Object.assign(entry, { brk: true, solo: soloNote, soloist });
         take.steps.push(entry);
         ui.rec = take.steps.length;
@@ -371,7 +370,7 @@
   }
   function handSVG(h, fingers) {
     const side = h & 1, lens = side === 0 ? LEN_LEFT : LEN_RIGHT;
-    let o = `<svg viewBox="0 0 110 118" role="group" aria-label="${(h < 2 ? T.pair1 : T.pair2) + " · " + (side === 0 ? T.left_short : T.right_short)}">`;
+    let o = `<svg viewBox="0 0 110 118" role="group" aria-label="${side === 0 ? T.left_short : T.right_short}">`;
     [10, 15, 20, 25, 30].forEach(y => { o += `<line x1="6" y1="${y}" x2="104" y2="${y}" class="staffl"/>`; });
     o += `<rect class="palm" x="14" y="70" width="82" height="44" rx="14"/>`;
     o += side === 0
@@ -395,10 +394,10 @@
   const slotsEl = $("slots"), lanesEl = $("lanes"), laneLabel = $("laneLabel");
   const ARTS = [["normal", T.art_normal], ["sustain", T.art_sustain], ["staccato", T.art_staccato]];
   const slotEls = [];
-  [0, 1].forEach(set => {
-    const d = document.createElement("details");
-    d.className = "pair"; d.open = true;
-    d.innerHTML = `<summary><span>${set === 0 ? T.pair1 : T.pair2}</span><span class="pair__insts"></span></summary><div class="pair__hands"></div>`;
+  SETS.forEach(set => {
+    const d = document.createElement(SETS.length > 1 ? "details" : "div");
+    d.className = SETS.length > 1 ? "pair" : "pair pair--solo"; if (SETS.length > 1) d.open = true;
+    d.innerHTML = (SETS.length > 1 ? `<summary><span>${set === 0 ? T.pair1 : T.pair2}</span><span class="pair__insts"></span></summary>` : "") + `<div class="pair__hands"></div>`;
     slotsEl.appendChild(d);
     [0, 1].forEach(side => {
       const h = set * 2 + side;
@@ -415,6 +414,7 @@
   function pairSummary() {
     // the summary names the instruments, so a closed pair still says what it plays
     slotsEl.querySelectorAll(".pair").forEach((d, set) => {
+      if (!d.querySelector(".pair__insts")) return;
       d.querySelector(".pair__insts").textContent = iName(pattern[set * 2].inst) + " / " + iName(pattern[set * 2 + 1].inst);
     });
   }
@@ -490,7 +490,7 @@
     lanesEl.querySelectorAll(`[data-step="${n}"]`).forEach(x => x.classList.add("cur"));
     if (solo) return;   // during a break the hands rest
     const idx = n % tl();
-    [0, 1].forEach(set => {
+    SETS.forEach(set => {
       const slot = slotEls[handOf(set, idx)];
       slot.classList.add("cur");
       const g = slot.querySelector(`g[data-f="${idx & 3}"]`);
@@ -503,7 +503,7 @@
     if (pos % take.len !== 0) return;
     const bar = take.steps.slice(pos, pos + take.len);
     if (bar[0].brk) return;
-    [0, 1, 2, 3].forEach(h => {
+    pattern.forEach((_, h) => {
       const set = h >> 1, side = h & 1;
       const fingers = [0, 1, 2, 3].map(f => { const s = bar[side * 4 + f]; return s && s[set].on ? 1 : 0; });
       const s0 = (bar[side * 4] || bar[0])[set];
@@ -514,8 +514,8 @@
 
   /* ---------- volume section: open-palm faders ---------- */
   const mixEl = $("mixer");
-  const PALM = `<svg viewBox="0 0 60 64" aria-hidden="true"><path class="palm-o" d="M14 30 V12 a4 4 0 0 1 8 0 V28 V6 a4 4 0 0 1 8 0 V28 V8 a4 4 0 0 1 8 0 V30 V16 a4 4 0 0 1 8 0 V40 c0 13 -8 20 -18 20 c-9 0 -14 -5 -19 -12 L3 37 a4 4 0 0 1 6 -5 L14 37 Z"/></svg>`;
-  const CHANNELS = [{ k: "d", sub: "" }, { k: 0, sub: "1 ←" }, { k: 1, sub: "1 →" }, { k: 2, sub: "2 ←" }, { k: 3, sub: "2 →" }, { k: "s", sub: "" }];
+  const PALM = `<svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(40 32 32)"><g class="oh"><rect class="oh__f" x="19" y="11" width="6.5" height="24" rx="3.25"/><rect class="oh__f" x="26" y="6" width="6.5" height="29" rx="3.25"/><rect class="oh__f" x="33" y="8" width="6.5" height="27" rx="3.25"/><rect class="oh__f" x="40" y="13" width="6.5" height="22" rx="3.25"/><path class="oh__t" d="M21 47 L10.5 32.5"/><rect class="oh__p" x="17.5" y="27" width="30.5" height="26" rx="9"/><path class="oh__l" d="M23 39 q11 6 22 -1 M25 45 q8 3 15 0 M30 31 v6"/></g></g></svg>`;   // open hand, palm up, diagonal
+  const CHANNELS = [{ k: "d", sub: "" }, ...pattern.map((_, h) => ({ k: h, sub: (SETS.length > 1 ? (h >> 1) + 1 + " " : "") + (h & 1 ? "→" : "←") })), { k: "s", sub: "" }];
   const chKey = el => { const k = el.dataset.ch; return /^\d$/.test(k) ? +k : k; };
   const getV = k => k === "d" ? vol.d : k === "s" ? vol.s : vol.h[k];
   const setV = (k, v) => { v = Math.max(0, Math.min(1, Math.round(v * 100) / 100)); if (k === "d") vol.d = v; else if (k === "s") vol.s = v; else vol.h[k] = v; applyVol(); };
@@ -540,7 +540,7 @@
     mixEl.querySelectorAll(".fader").forEach(el => {
       const k = chKey(el), n = chName(k), sub = el.querySelector(".fader__sub").textContent;
       el.querySelector(".fader__name").textContent = n;
-      const where = sub ? " (" + (sub[0] === "1" ? T.pair1 : T.pair2) + ", " + (sub.includes("←") ? T.left_short : T.right_short) + ")" : "";
+      const where = sub ? " (" + (sub.includes("←") ? T.left_short : T.right_short) + ")" : "";
       el.querySelector(".fader__track").setAttribute("aria-label", fmt(T.vol_of, { n }) + where);
     });
   }
@@ -615,6 +615,7 @@
     root.classList.toggle("is-take", mode === "take");
     root.classList.toggle("is-rec", mode === "rec" || mode === "armed");
     syncBreak();
+    if (typeof syncFloat === "function") syncFloat();
   }
   function haveStatus() {
     status(take && take.steps.length ? fmt(T.st_have, { n: Math.ceil(take.steps.length / take.len) }) : T.st_none);
@@ -717,8 +718,8 @@
   root.addEventListener("pointerdown", () => audio(), { once: true });
 
   /* ---------- share link ----------
-     #r=salsa&t=160&c=32&f=16 digits (4 hands)&a=4 styles (n/s/t)&i=4 instruments (t/x/d/v)
-      &v=6 volumes 0-100 (drums, 4 hands, soloist)&s=soloist */
+     #r=salsa&t=160&c=32&f=8 digits&a=2 styles (n/s/t)&i=2 instruments (t/x/d/v)
+      &v=volumes 0-100 (drums, each hand, soloist)&s=soloist   (older, longer links still open) */
   const ART_CODE = { normal: "n", sustain: "s", staccato: "t" }, CODE_ART = { n: "normal", s: "sustain", t: "staccato" };
   function saveHash() {
     const f = pattern.map(p => p.fingers.join("")).join("");
@@ -734,13 +735,40 @@
     const t = +q.get("t"); if (t >= 60 && t <= 240) bpm = t;
     if (q.get("c") === "23") claveMode = "23";
     const f = q.get("f");
-    if (f && /^([01]{8}|[01]{16})$/.test(f)) pattern.forEach((p, h) => { if (h * 4 < f.length) p.fingers = f.slice(h * 4, h * 4 + 4).split("").map(Number); });
+    if (f && /^[01]{8,16}$/.test(f)) pattern.forEach((p, h) => { if (h * 4 + 4 <= f.length) p.fingers = f.slice(h * 4, h * 4 + 4).split("").map(Number); });
     const a = q.get("a"); if (a && /^[nst]{2,4}$/.test(a)) pattern.forEach((p, h) => { if (a[h]) p.art = CODE_ART[a[h]]; });
-    const i = q.get("i"); if (i && /^[txdv]{4}$/.test(i)) pattern.forEach((p, h) => { p.inst = CODE_INST[i[h]]; });
+    const i = q.get("i"); if (i && /^[txdv]{2,4}$/.test(i)) pattern.forEach((p, h) => { if (i[h]) p.inst = CODE_INST[i[h]]; });
     const v = (q.get("v") || "").split(".").map(Number);
-    if (v.length === 6 && v.every(x => x >= 0 && x <= 100)) { vol.d = v[0] / 100; vol.h = v.slice(1, 5).map(x => x / 100); vol.s = v[5] / 100; }
+    if (v.length >= 3 && v.every(x => x >= 0 && x <= 100)) { vol.d = v[0] / 100; pattern.forEach((_, h) => { if (h + 1 < v.length - 1) vol.h[h] = v[h + 1] / 100; }); vol.s = v[v.length - 1] / 100; }
     if (CODE_INST[q.get("s")]) soloist = CODE_INST[q.get("s")];
   }
+
+  /* ---------- floating play / record / stop (shows when the main bar scrolls away) ---------- */
+  const fl = root.querySelector(".mans__float");
+  const mainBar = root.querySelector(".mans__transport");
+  if (fl && "IntersectionObserver" in window) {
+    let barOut = false, gameIn = true;
+    const sync = () => fl.classList.toggle("is-on", barOut && gameIn);
+    new IntersectionObserver(es => { barOut = !es[0].isIntersecting && es[0].boundingClientRect.top < 0; sync(); }).observe(mainBar);
+    new IntersectionObserver(es => { gameIn = es[0].isIntersecting; sync(); }, { rootMargin: "-120px 0px 0px 0px" }).observe(root);
+  }
+  if (fl) {
+    fl.addEventListener("click", e => {
+      const b = e.target.closest("[data-fl]"); if (!b) return;
+      const a = b.dataset.fl;
+      if (a === "play") { if (!(playing && mode !== "take")) btn("play").click(); }
+      else if (a === "rec") btn("rec").click();
+      else if (a === "stop") { if (playing) stop(); }
+    });
+  }
+  function syncFloat() {
+    if (!fl) return;
+    fl.querySelector('[data-fl="play"]').classList.toggle("on", playing && mode !== "take");
+    fl.querySelector('[data-fl="rec"]').classList.toggle("on", mode === "rec" || mode === "armed");
+    fl.querySelector('[data-fl="stop"]').disabled = !playing;
+    fl.querySelector(".mans__float-st").textContent = statusEl.textContent;
+  }
+  new MutationObserver(syncFloat).observe(statusEl, { childList: true, characterData: true, subtree: true });
 
   /* ---------- go ---------- */
   loadHash();

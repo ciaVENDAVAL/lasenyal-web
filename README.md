@@ -15,11 +15,12 @@ PDFs (press kit) go in the sister repo **lasenyal-docs**.
 
 ## The hands game (Mans / Manos / Hands)
 
-Two pairs of hands, thumbs outward; each finger is an eighth note (finger up = it plays). Both pairs play the same bar together. Each hand picks an instrument: trumpet (B♭), sax (F), voice (D) — together a B♭ major chord — or djembe slap (percussion, so the playing-style buttons are off). Six rhythms, tempo, clave 3-2/2-3, playing style per hand.
+Two hands, thumbs outward; each finger is an eighth note (finger up = it plays). Each hand picks an instrument: trumpet (B♭), sax (F), voice (D) — together a B♭ major chord — or djembe slap (percussion, so the playing-style buttons are off). Six rhythms, tempo, clave 3-2/2-3, playing style per hand.
 The page has four collapsible sections: **Hands** (each pair also folds away), **Rhythm**, **Volume** and **Break**.
-- **Volume:** one open-palm fader per channel (drums, each of the four hands, soloist). Drag the palm up for louder, down for softer (arrow keys work too).
-- **Break:** pick the soloist (trumpet, sax, djembe, voice), then tap the chopping hand. At the next bar everyone stops and the soloist improvises one bar (random each time, B♭ major pentatonic; djembe mixes bass, tone and slap). Then the band comes back in.
+- **Volume:** one open-hand fader per channel (drums, each hand, soloist), drawn diagonal with the palm up. Drag it up for louder, down for softer (arrow keys work too).
+- **Break:** pick the soloist (trumpet, sax, djembe, voice), then tap the moving open hand (palm up, fingers to the upper left). At the next bar everyone stops and the soloist improvises one bar (random each time, B♭ major pentatonic; djembe mixes bass, tone and slap). Then the band comes back in.
 
+A small floating bar (play, record, stop) appears at the bottom right when you scroll past the main controls.
 **Record** starts at the next bar and keeps what the hands play (up to 32 bars); **Play recording** replays it with the hands moving.
 The current hands, rhythm, tempo, volumes and soloist are kept in the page address, so **Copy link** shares a groove.
 

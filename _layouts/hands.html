@@ -20,6 +20,13 @@ layout: default
     <p class="mans__status" role="status" aria-live="polite">{{ m.st_none }}</p>
   </div>
 
+  <div class="mans__float" aria-label="{{ m.title }}">
+    <button type="button" class="fb fb--play" data-fl="play" aria-label="{{ m.play }}">▶</button>
+    <button type="button" class="fb fb--rec" data-fl="rec" aria-label="{{ m.rec }}">●</button>
+    <button type="button" class="fb" data-fl="stop" aria-label="{{ m.stop }}">■</button>
+    <span class="mans__float-st" aria-hidden="true"></span>
+  </div>
+
   <!-- 1 · hands -->
   <details class="sec" open>
     <summary><span class="sec__n">01</span>{{ m.sec_hands }}</summary>
@@ -83,12 +90,7 @@ layout: default
             <svg viewBox="0 0 160 160" aria-hidden="true">
               <g class="chop__trail"><path d="M132 28 L28 132" /></g>
               <g class="chop__hand">
-                <g transform="rotate(135 0 0)">
-                  <path class="chop__arm" d="M-62 -11 H-4 V11 H-62 Z" />
-                  <path class="chop__palm" d="M-8 -12 H44 Q62 -12 62 0 Q62 12 44 12 H-8 Z" />
-                  <path class="chop__line" d="M6 -4 H50 M6 4 H52" />
-                  <path class="chop__thumb" d="M-2 -12 Q10 -20 26 -14" />
-                </g>
+                <g transform="translate(-32 -32) scale(1.15) rotate(-40 32 32)"><g class="oh"><rect class="oh__f" x="19" y="11" width="6.5" height="24" rx="3.25"/><rect class="oh__f" x="26" y="6" width="6.5" height="29" rx="3.25"/><rect class="oh__f" x="33" y="8" width="6.5" height="27" rx="3.25"/><rect class="oh__f" x="40" y="13" width="6.5" height="22" rx="3.25"/><path class="oh__t" d="M21 47 L10.5 32.5"/><rect class="oh__p" x="17.5" y="27" width="30.5" height="26" rx="9"/><path class="oh__l" d="M23 39 q11 6 22 -1 M25 45 q8 3 15 0 M30 31 v6"/></g></g>
               </g>
             </svg>
             <span class="chop__t">{{ m.break_go }}</span>
