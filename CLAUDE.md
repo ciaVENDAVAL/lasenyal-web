@@ -8,7 +8,9 @@ Website and public material of **La Senyal** (Barcelona). Same structure as ciaV
   *La Senyal* (`master/LA SENYAL master fact sheet.md`). Newest info wins: update the sheet, then every file and
   language that uses the fact (see `UPDATING.md`), then list what changed.
 - Website texts: `_data/i18n/{ca,es,en}.yml` (same keys in all three) · data: `_data/*.yml` · pages: `_layouts/`.
-- The admin (repo `lasenyal-admin`, Sveltia CMS) edits these same files and commits to `main`. Pull before working.
+- The admin (repo `lasenyal-admin`, Sveltia CMS) and the on-page editor (`#edit`, `assets/js/edit.js`) edit these
+  same files and commit to `main`. Pull before working. The on-page editor finds texts by exact wording: a text
+  shown through a filter or glued to other text is not editable there (use the admin).
 
 ## Never in this repo
 Fees, budgets, tax IDs (NIF/CIF/DNI), bank data, team members' private phones/addresses/IDs, application answers —

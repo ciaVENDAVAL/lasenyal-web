@@ -22,6 +22,10 @@ the menu (`_data/menu.yml`), contact/footer/main photos (`_data/site.yml`) and c
 - **Photos** uploaded there go to `assets/img/lg/` (or `assets/img/members/`). The workflow
   `.github/workflows/photos.yml` (`tools/photos.py`) first keeps the untouched original in `source-images/`, then makes the `assets/img/sm/` copy, shrinks anything over
   1800 px and crops member photos to 500×500, commits, and asks Pages to rebuild.
+- **Edit on the page:** add `#edit` to any address (or the button on the admin start page). `assets/js/edit.js`
+  (loaded only in edit mode) matches each visible text to the YAML in `_data/` by its exact wording, makes it
+  editable, lets you replace photos (same file name, so every use changes) and PDFs (new dated file + `downloads.yml`),
+  and publishes everything as one commit through the GitHub API with the admin's token.
 - **Extra pages** use `_layouts/page.html`; their address is `/<name>/` (ES), `/ca/<name>/`, `/en/<name>/`.
 - If you add or rename keys in `_data/i18n/*.yml`, regenerate the admin form: in `lasenyal-admin`,
   `python3 scripts/make_config.py ../lasenyal-web web/config.yml`.
