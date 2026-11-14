@@ -46,7 +46,7 @@ layout: default
       {%- assign y1 = c.date | date: "%Y" -%}
       {%- assign y2 = c.end | date: "%Y" %}
     <li class="res__i">
-      {%- if c.photo %}<img src="{{ '/assets/img/sm/' | append: c.photo | relative_url }}" alt="" loading="lazy">{% endif %}
+      {%- assign cp = c.photo | split: "/" | last %}{%- if c.photo %}<img src="{{ '/assets/img/sm/' | append: cp | relative_url }}" alt="" loading="lazy">{% endif %}
       <div class="res__txt">
         <h3>{{ c.venue }}</h3>
         <p class="mono">{% if c.label %}{{ c.label }}{% else %}{{ t.months[m1] }} {% if y1 != y2 %}{{ y1 }} {% endif %}– {{ t.months[m2] }} {{ y2 }}{% endif %}</p>

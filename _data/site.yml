@@ -1,0 +1,16 @@
+# General site settings — editable in the admin (lasenyal-admin) under "Site settings".
+contact:
+  email: lasenyalbcn@gmail.com
+  phones:
+    - "+34 647 60 49 57"
+    - "+34 691 74 07 03"
+  instagram: https://www.instagram.com/lasenyalbcn/
+  video: https://www.youtube.com/watch?v=mnEiAivFHJ8
+footer_text: "La Senyal · Barcelona"
+# Main photos (full size, in assets/img/lg/). The small version in assets/img/sm/ is made automatically.
+images:
+  hero: /assets/img/lg/grupo-fila-2.jpg
+  hero_mobile: /assets/img/lg/fila-vertical.jpg
+  video_cover: /assets/img/lg/la-nau.jpg
+  intro: /assets/img/lg/direccion-senas.jpg
+  band: /assets/img/lg/grupo-jardin.jpg

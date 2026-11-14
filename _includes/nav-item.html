@@ -1,0 +1,14 @@
+{%- comment -%} One menu link. Needs: item (from _data/menu.yml), t, L. Optional: li=true {%- endcomment -%}
+{%- assign it = include.item -%}
+{%- assign href = "" -%}{%- assign label = "" -%}{%- assign cur = false -%}{%- assign cls = "" -%}
+{%- if it.type == "page" -%}
+  {%- assign d = site.extra | where: "lang", page.lang | where: "slug", it.page | first -%}
+  {%- if d -%}{%- assign href = d.url | relative_url -%}{%- assign label = it.label | default: d.menu_title | default: d.title -%}{%- if page.url == d.url -%}{%- assign cur = true -%}{%- endif -%}{%- endif -%}
+{%- elsif it.key == "contact" -%}
+  {%- assign href = "#contact" -%}{%- assign label = include.t.contact -%}{%- assign cls = "nav__contact" -%}
+{%- elsif it.key -%}
+  {%- assign href = include.L.pages[it.key] | relative_url -%}{%- assign label = include.t.nav[it.key] -%}{%- if page.ref == it.key -%}{%- assign cur = true -%}{%- endif -%}
+{%- endif -%}
+{%- if href != "" -%}
+{% if include.li %}<li>{% endif %}<a href="{{ href }}"{% if cls != "" and include.li == nil %} class="{{ cls }}"{% endif %}{% if cur %} aria-current="page"{% endif %}>{{ label }}</a>{% if include.li %}</li>{% endif %}
+{%- endif -%}

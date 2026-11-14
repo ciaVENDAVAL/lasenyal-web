@@ -144,7 +144,7 @@
     <p class="lab">03 / {{ t.pk_archive }}</p>
     <h2 class="big">{{ t.pk_archive }}.</h2>
     <div class="grid">
-      <a href="{{ site.contact.video }}"><img class="ph" src="{{ img }}lg/la-nau.jpg" alt=""><span class="play">▶</span><span class="cap">{{ t.pk_video }} ↗</span></a>
+      <a href="{{ site.data.site.contact.video }}"><img class="ph" src="{{ img }}lg/la-nau.jpg" alt=""><span class="play">▶</span><span class="cap">{{ t.pk_video }} ↗</span></a>
       <a href="{{ site.url }}{{ site.baseurl }}/assets/img/lg/grupo-jardin.jpg"><img class="ph" src="{{ img }}sm/grupo-jardin.jpg" alt=""><span class="cap">{{ t.pk_photo }} ↗</span></a>
       <a href="{{ site.url }}{{ site.baseurl }}/assets/img/lg/generator.jpg"><img class="ph" src="{{ img }}sm/generator.jpg" alt=""><span class="cap">{{ t.pk_photo }} ↗</span></a>
       <a href="{{ site.url }}{{ site.baseurl }}/assets/img/lg/vientos-directo.jpg"><img class="ph" src="{{ img }}sm/vientos-directo.jpg" alt=""><span class="cap">{{ t.pk_photo }} ↗</span></a>
@@ -176,10 +176,10 @@
     <img src="{{ img }}tambor.png" alt="">
     <div class="who">
       <span class="k">{{ t.contact }} · {{ t.booking }}</span>
-      <a class="mail" href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+      <a class="mail" href="mailto:{{ site.data.site.contact.email }}">{{ site.data.site.contact.email }}</a>
     </div>
-    {%- for ph in site.contact.phones %}<span class="v">{{ ph }}</span>{% endfor %}
-    <a class="v" href="{{ site.contact.instagram }}">Instagram ↗</a>
+    {%- for ph in site.data.site.contact.phones %}<span class="v">{{ ph }}</span>{% endfor %}
+    <a class="v" href="{{ site.data.site.contact.instagram }}">Instagram ↗</a>
     <a class="v r" href="{{ site.url }}{{ site.baseurl }}{{ L.pages.home }}">Web ↗</a>
   </div>
 </section>

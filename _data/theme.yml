@@ -1,0 +1,7 @@
+# Colours and font — editable in the admin under "Look".
+background: "#0c0404"
+surface: "#171211"
+headings: "#ffffff"
+accent: "#e675b5"
+box: "#0a733b"
+body_font: Questrial

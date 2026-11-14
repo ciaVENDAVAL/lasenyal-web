@@ -382,7 +382,7 @@
       const dis = side === 1 && i === 3 && tl() === 7;
       const num = side * 4 + i + 1;
       o += `<g data-f="${i}" class="${on ? "on" : ""}${dis ? " dis" : ""}" tabindex="${dis ? -1 : 0}" role="button" aria-pressed="${on}"` +
-        ` aria-label="${fmt(T.finger, { n: num })}: ${on ? T.on : T.off}"${dis ? ' aria-disabled="true"' : ""}>` +
+        ` aria-label="${fmt(T.finger, { n: num })}: ${on ? T.f_on : T.f_off}"${dis ? ' aria-disabled="true"' : ""}>` +
         noteGlyph(c - 1, on) +
         `<rect class="fing" x="${c - 7}" y="${on ? 84 - L : 66}" width="14" height="${on ? L : 18}" rx="7"/>` +
         `<rect class="hit" x="${c - 9}" y="0" width="18" height="88" fill="transparent"/></g>`;

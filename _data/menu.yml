@@ -1,0 +1,12 @@
+# Menu — editable in the admin under "Menu".
+# Each item is either a built-in page (home, members, concerts, hands, contact)
+# or one of the simple pages from "Pages" (page: its file name, e.g. rider).
+header:   # links in the top bar (wide screens)
+  - { type: builtin, key: concerts }
+  - { type: builtin, key: contact }
+menu:     # the full menu behind the ☰ button
+  - { type: builtin, key: home }
+  - { type: builtin, key: members }
+  - { type: builtin, key: concerts }
+  - { type: builtin, key: hands }
+  - { type: builtin, key: contact }

@@ -9,14 +9,15 @@ layout: default
 </section>
 
 <figure class="wrap band-photo">
-  <img src="{{ '/assets/img/lg/grupo-jardin.jpg' | relative_url }}" alt="La Senyal" loading="lazy">
+  <img src="{{ site.data.site.images.band | relative_url }}" alt="La Senyal" loading="lazy">
 </figure>
 
 <section class="wrap">
   <ul class="members">
     {%- for m in site.data.members %}
+    {%- assign mp = m.photo | split: "/" | last %}
     <li class="member">
-      <img src="{{ '/assets/img/members/' | append: m.photo | relative_url }}" alt="{{ m.name }}" width="500" height="500" loading="lazy">
+      <img src="{{ '/assets/img/members/' | append: mp | relative_url }}" alt="{{ m.name }}" width="500" height="500" loading="lazy">
       <div class="member__row">
         <h2>{{ m.name }}</h2>
         {%- if m.instagram %}

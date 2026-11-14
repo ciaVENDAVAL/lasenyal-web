@@ -1,0 +1,8 @@
+{%- comment -%} URL of the current page in language include.code (falls back to that language's home). {%- endcomment -%}
+{%- assign _l = site.languages | where: "code", include.code | first -%}
+{%- if page.collection == "extra" -%}
+  {%- assign _d = site.extra | where: "lang", include.code | where: "slug", page.slug | first -%}
+  {%- if _d -%}{{ _d.url }}{%- else -%}{{ _l.pages.home }}{%- endif -%}
+{%- else -%}
+  {%- assign _u = _l.pages[page.ref] | default: _l.pages.home -%}{{ _u }}
+{%- endif -%}

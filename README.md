@@ -13,6 +13,19 @@ PDFs (press kit) go in the sister repo **lasenyal-docs**.
 - **Accessibility button** (bottom left, like the other ciaVENDAVAL sites): light theme, stop animations and video, high contrast, underline links, line spacing, easier font, text size. Choices are remembered per browser. The footer keeps a left margin so the button never covers its text.
 - **Press kit:** a hidden page at `/presskit/<lang>/`, printed to PDF by `scripts/presskit.py`.
 
+## Editing without code: the admin
+
+**https://ciavendaval.github.io/lasenyal-admin/** (repo `lasenyal-admin`) edits this repo from the browser:
+texts in the three languages (`_data/i18n/`), concerts, members, photo strip, simple extra pages (`_extra/<lang>/`),
+the menu (`_data/menu.yml`), contact/footer/main photos (`_data/site.yml`) and colours/font (`_data/theme.yml`).
+
+- **Photos** uploaded there go to `assets/img/lg/` (or `assets/img/members/`). The workflow
+  `.github/workflows/photos.yml` (`scripts/photos.py`) then makes the `assets/img/sm/` copy, shrinks anything over
+  1800 px and crops member photos to 500×500, commits, and asks Pages to rebuild.
+- **Extra pages** use `_layouts/page.html`; their address is `/<name>/` (ES), `/ca/<name>/`, `/en/<name>/`.
+- If you add or rename keys in `_data/i18n/*.yml`, regenerate the admin form: in `lasenyal-admin`,
+  `python3 scripts/make_config.py ../lasenyal-web web/config.yml`.
+
 ## The hands game (Mans / Manos / Hands)
 
 Two hands, thumbs outward; each finger is an eighth note (finger up = it plays). Each hand picks an instrument: trumpet (B♭), sax (F), voice (D) — together a B♭ major chord — or djembe slap (percussion, so the playing-style buttons are off). Six rhythms, tempo, clave 3-2/2-3, playing style per hand.

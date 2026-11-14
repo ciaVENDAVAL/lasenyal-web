@@ -1,12 +1,12 @@
-# Photos on the home page strip, in order. Files: assets/img/sm/ + assets/img/lg/ (same name).
+# Photos on the home page strip, in order. Full size in assets/img/lg/; the small copy in assets/img/sm/ (same name) is made automatically.
 # o: p = portrait, l = landscape
-- { f: absenta-direccion.jpg, o: p }
-- { f: vientos-directo.jpg, o: l }
-- { f: clarinete.jpg, o: p }
-- { f: generator.jpg, o: p }
-- { f: grupo-jardin.jpg, o: l }
-- { f: bateria.jpg, o: p }
-- { f: trompeta.jpg, o: l }
-- { f: voz.jpg, o: p }
-- { f: fila-vertical.jpg, o: p }
-- { f: grupo-fila.jpg, o: l }
+- { f: /assets/img/lg/absenta-direccion.jpg, o: p }
+- { f: /assets/img/lg/vientos-directo.jpg, o: l }
+- { f: /assets/img/lg/clarinete.jpg, o: p }
+- { f: /assets/img/lg/generator.jpg, o: p }
+- { f: /assets/img/lg/grupo-jardin.jpg, o: l }
+- { f: /assets/img/lg/bateria.jpg, o: p }
+- { f: /assets/img/lg/trompeta.jpg, o: l }
+- { f: /assets/img/lg/voz.jpg, o: p }
+- { f: /assets/img/lg/fila-vertical.jpg, o: p }
+- { f: /assets/img/lg/grupo-fila.jpg, o: l }

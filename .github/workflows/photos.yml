@@ -1,0 +1,47 @@
+# After photos are uploaded (from the admin or by hand), make the small copies,
+# shrink very large photos and square the member portraits. Then rebuild the site.
+name: Prepare photos
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/img/lg/**"
+      - "assets/img/members/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency: photos
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - name: Resize
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$BEFORE" ] && git cat-file -e "$BEFORE" 2>/dev/null; then
+            git diff --name-only --diff-filter=AM "$BEFORE" HEAD -- assets/img/lg assets/img/members > changed.txt
+          else
+            : > changed.txt
+          fi
+          cat changed.txt
+          python scripts/photos.py $(cat changed.txt)
+          rm changed.txt
+      - name: Commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add assets/img
+          if git diff --cached --quiet; then echo "Nothing to change"; exit 0; fi
+          git -c user.name="photos bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Prepare photos (small copies, sizes)"
+          git push
+          # a push made by this workflow does not start a Pages build by itself
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

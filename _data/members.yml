@@ -1,43 +1,43 @@
 # Band members, in display order.
-# photo: file in assets/img/members/ (square, about 500×500)
+# photo: assets/img/members/… (cropped square 500×500 automatically)
 # role: key from "roles" in _data/i18n/<lang>.yml
 - name: Nestor Randazzo
   role: perc_dir
-  photo: nestor-randazzo.jpg
+  photo: /assets/img/members/nestor-randazzo.jpg
   instagram: https://www.instagram.com/nestorrandazzo/
 - name: Txus Eguílaz
   role: perc_dir
-  photo: txus-eguilaz.jpg
+  photo: /assets/img/members/txus-eguilaz.jpg
   instagram: https://www.instagram.com/txuseguilaz_ritmoenergia/
 - name: Alián Rodrigues
   role: euph_dir
-  photo: alian-rodrigues.jpg
+  photo: /assets/img/members/alian-rodrigues.jpg
   instagram: https://www.instagram.com/a.alian.n/
 - name: Stefano Ferraro
   role: tenor
-  photo: stefano-ferraro.jpg
+  photo: /assets/img/members/stefano-ferraro.jpg
   instagram: https://www.instagram.com/efe_stiv/
 - name: Facundo Fernandez Alberdi
   role: perc
-  photo: facundo-fernandez-alberdi.jpg
+  photo: /assets/img/members/facundo-fernandez-alberdi.jpg
   instagram: https://www.instagram.com/ffa_musica/
 - name: Juan Pablo Bizzotto
   role: perc
-  photo: juan-pablo-bizzotto.jpg
+  photo: /assets/img/members/juan-pablo-bizzotto.jpg
   instagram: https://www.instagram.com/jota_bizzotto/
 - name: Raquel Navarro
   role: perc
-  photo: raquel-navarro.jpg
+  photo: /assets/img/members/raquel-navarro.jpg
   instagram: https://www.instagram.com/raquelnavarro_worldmusic/
 - name: Juan Alfredo Lichter
   role: alto
-  photo: juan-alfredo-lichter.jpg
+  photo: /assets/img/members/juan-alfredo-lichter.jpg
   instagram: https://www.instagram.com/juanlichter90/
 - name: Lucas Raiquen Pereyra
   role: trumpet
-  photo: lucas-raiquen-pereyra.jpg
+  photo: /assets/img/members/lucas-raiquen-pereyra.jpg
   instagram: https://www.instagram.com/lukasraiquen/
 - name: Tyle Michael Fernández
   role: bari
-  photo: tyle-michael-fernandez.jpg
+  photo: /assets/img/members/tyle-michael-fernandez.jpg
   instagram: https://www.instagram.com/contamina_perpetua/
