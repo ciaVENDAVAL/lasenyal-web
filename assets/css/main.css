@@ -523,3 +523,39 @@ html.a11y-motion .chop__hand { transform: translate(80px, 80px); }
 .mans__float-st { min-width: 0; max-width: 15rem; padding: 0 .4rem; font: .66rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 420px) { .mans__float-st { display: none; } }
 html.a11y-motion .fb--rec.on { animation: none; }
+
+/* ── light theme (accessibility panel) ───
+   Light page, dark text. Anything sitting on a photo or a coloured block keeps the dark-theme colours. */
+html.a11y-light { --bg: #faf6f3; --bg-2: #efe7e2; --ink: #160a0a; --text: rgb(22 10 10 / .86); --muted: rgb(22 10 10 / .62); --line: rgb(22 10 10 / .16); --pink: #b02e69; color-scheme: light; }
+html.a11y-light .hero, html.a11y-light .p-home .top, html.a11y-light .next__box, html.a11y-light .card, html.a11y-light .video, html.a11y-light .lb,
+html.a11y-light .menu-btn {
+  --bg: #0c0404; --bg-2: #171211; --ink: #fff; --text: rgb(240 237 235 / .85); --muted: rgb(240 237 235 / .6); --line: rgb(240 237 235 / .2); --pink: #e675b5; }
+html.a11y-light .p-home .top .menu { --bg: #0c0404; }
+html.a11y-light .strip { scrollbar-color: var(--pink) transparent; }
+html.a11y-light .mb--play, html.a11y-light .btn { color: #fff; }
+html.a11y-light .btn--dark { background: #160a0a; color: #fff; }
+html.a11y-light .a11y-btn { background: rgb(250 246 243 / .6); }
+/* game: hands, staff, drum grid */
+html.a11y-light .palm { fill: #c7b3a9; }
+html.a11y-light .thumb { fill: #b39d92; }
+html.a11y-light .fing { fill: #9a847b; }
+html.a11y-light .on .fing { fill: #2a1a17; }
+html.a11y-light .slot[data-inst="sax"] .on .fing { fill: #7a5f00; }
+html.a11y-light .slot[data-inst="djembe"] .on .fing { fill: #74461c; }
+html.a11y-light .slot[data-inst="voice"] .on .fing { fill: #25603d; }
+html.a11y-light .slot .playing .fing, html.a11y-light .slot .playing.on .fing { fill: var(--pink); }
+html.a11y-light .playing:not(.on) .fing { fill: #d99ab8; }
+html.a11y-light .staffl { stroke: rgb(22 10 10 / .25); }
+html.a11y-light .rest { stroke: rgb(22 10 10 / .45); }
+html.a11y-light .knuckles { stroke: rgb(22 10 10 / .15); }
+html.a11y-light .cell { border-color: rgb(22 10 10 / .08); }
+html.a11y-light .cell.hit { background: rgb(22 10 10 / .32); }
+html.a11y-light .oh__f, html.a11y-light .oh__p { fill: #5a4038; stroke: var(--bg-2); }
+html.a11y-light .oh__t { stroke: #5a4038; }
+html.a11y-light .oh__l { stroke: rgb(250 246 243 / .45); }
+html.a11y-light .chop__trail path { stroke: rgb(22 10 10 / .2); }
+html.a11y-light .fader__track::before { background: rgb(22 10 10 / .15); }
+html.a11y-light .mans__float { background: rgb(239 231 226 / .94); }
+html.a11y-light .play-teaser__art .on .fing { fill: #2a1a17; }
+/* light + high contrast */
+html.a11y-light.a11y-contrast { --bg: #fff; --bg-2: #fff; --ink: #000; --text: #000; --muted: #000; --line: rgb(0 0 0 / .6); --pink: #8f1149; }

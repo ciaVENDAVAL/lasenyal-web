@@ -76,6 +76,7 @@ pk_photo: "Photo"
 
 a11y:
   title: "Accessibility"
+  light: "Light theme"
   motion: "Stop animations and video"
   contrast: "High contrast"
   links: "Underline links"

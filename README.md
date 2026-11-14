@@ -10,7 +10,7 @@ PDFs (press kit) go in the sister repo **lasenyal-docs**.
 - **4 pages:** Home, Members, Concerts, Hands (game) — in **CA** (`/ca/`, `/ca/equip/`, `/ca/concerts/`, `/ca/mans/`), **ES** (`/`, `/equipo/`, `/conciertos/`, `/manos/`) and **EN** (`/en/`, `/en/members/`, `/en/concerts/`, `/en/hands/`). ES stays at the root like the old site; the old `/inicio/` address redirects.
 - **Contact** sits small in the footer of every page, with the press kit in the visitor's language.
 - **Photos are local** (`assets/img/sm` = thumbnails, `assets/img/lg` = full size, `assets/img/members` = portraits). Click a photo on the home page to open it full size (arrows, keyboard ← →, swipe, Esc).
-- **Accessibility button** (bottom left, like the other ciaVENDAVAL sites): stop animations and video, high contrast, underline links, line spacing, easier font, text size. Choices are remembered per browser. The footer keeps a left margin so the button never covers its text.
+- **Accessibility button** (bottom left, like the other ciaVENDAVAL sites): light theme, stop animations and video, high contrast, underline links, line spacing, easier font, text size. Choices are remembered per browser. The footer keeps a left margin so the button never covers its text.
 - **Press kit:** a hidden page at `/presskit/<lang>/`, printed to PDF by `scripts/presskit.py`.
 
 ## The hands game (Mans / Manos / Hands)

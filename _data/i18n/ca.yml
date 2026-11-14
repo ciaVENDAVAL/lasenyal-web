@@ -76,6 +76,7 @@ pk_photo: "Foto"
 
 a11y:
   title: "Accessibilitat"
+  light: "Tema clar"
   motion: "Atura animacions i vídeo"
   contrast: "Contrast alt"
   links: "Subratlla enllaços"

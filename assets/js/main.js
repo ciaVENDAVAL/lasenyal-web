@@ -83,7 +83,7 @@
   const KEY = "ls-a11y", root = document.documentElement;
   const prefs = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (e) {} };
-  const TOGGLES = ["motion", "contrast", "links", "spacing", "font"];
+  const TOGGLES = ["light", "motion", "contrast", "links", "spacing", "font"];
   const aBtn = document.querySelector(".a11y-btn"), panel = document.getElementById("a11y-panel");
   const apply = () => {
     TOGGLES.forEach(k => root.classList.toggle("a11y-" + k, !!prefs[k]));
