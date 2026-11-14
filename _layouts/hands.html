@@ -3,6 +3,7 @@ layout: default
 ---
 {%- assign t = site.data.i18n[page.lang] -%}
 {%- assign m = t.mans -%}
+{%- include inst-icons.html -%}
 <section class="wrap head">
   <p class="label">/ La Senyal /</p>
   <h1>{{ m.title }}</h1>
@@ -11,28 +12,91 @@ layout: default
 </section>
 
 <section class="wrap mans" id="mans" aria-label="{{ m.title }}">
-  <div class="mans__bar">
+  <div class="mans__bar mans__transport">
     <button type="button" class="mb mb--play" data-act="play" aria-pressed="false"><span class="mb__i" aria-hidden="true">▶</span><span class="mb__t">{{ m.play }}</span></button>
     <button type="button" class="mb mb--rec" data-act="rec" aria-pressed="false"><span class="mb__i" aria-hidden="true">●</span><span class="mb__t">{{ m.rec }}</span></button>
     <button type="button" class="mb" data-act="take" aria-pressed="false" disabled><span class="mb__i" aria-hidden="true">▷</span><span class="mb__t">{{ m.take }}</span></button>
+    <button type="button" class="mb" data-act="share">{{ m.share }}</button>
     <p class="mans__status" role="status" aria-live="polite">{{ m.st_none }}</p>
   </div>
 
-  <div class="mans__bar mans__bar--set">
-    <label class="mf"><span>{{ m.rhythm }}</span><select data-ctl="rhythm"></select></label>
-    <label class="mf mf--tempo"><span>{{ m.tempo }}</span><input data-ctl="tempo" type="range" min="60" max="240" step="1" value="160"><output data-ctl="tempoOut">160 BPM</output></label>
-    <label class="mf" data-ctl="claveWrap"><span class="sr">Clave</span><select data-ctl="clave"><option value="32">{{ m.clave32 }}</option><option value="23">{{ m.clave23 }}</option></select></label>
-    <button type="button" class="mb mb--tog" data-act="drums" aria-pressed="true">{{ m.drums }}</button>
-    <button type="button" class="mb mb--tog" data-act="hands" aria-pressed="true">{{ m.hands_toggle }}</button>
-    <button type="button" class="mb" data-act="clear">{{ m.clear }}</button>
-    <button type="button" class="mb" data-act="share">{{ m.share }}</button>
-  </div>
+  <!-- 1 · hands -->
+  <details class="sec" open>
+    <summary><span class="sec__n">01</span>{{ m.sec_hands }}</summary>
+    <div class="sec__body">
+      <div class="mans__bar">
+        <button type="button" class="mb mb--tog" data-act="hands" aria-pressed="true">{{ m.hands_toggle }}</button>
+        <button type="button" class="mb" data-act="clear">{{ m.clear }}</button>
+        <p class="sec__note">{{ m.hands_label }}</p>
+      </div>
+      <div class="mans__pairs" data-ctl="slots"></div>
+    </div>
+  </details>
 
-  <p class="label">{{ m.hands_label }}</p>
-  <div class="mans__hands" data-ctl="slots"></div>
+  <!-- 2 · rhythm -->
+  <details class="sec" open>
+    <summary><span class="sec__n">02</span>{{ m.sec_rhythm }}</summary>
+    <div class="sec__body">
+      <div class="mans__bar">
+        <label class="mf"><span>{{ m.rhythm }}</span><select data-ctl="rhythm"></select></label>
+        <label class="mf mf--tempo"><span>{{ m.tempo }}</span><input data-ctl="tempo" type="range" min="60" max="240" step="1" value="160"><output data-ctl="tempoOut">160 BPM</output></label>
+        <label class="mf" data-ctl="claveWrap"><span class="sr">Clave</span><select data-ctl="clave"><option value="32">{{ m.clave32 }}</option><option value="23">{{ m.clave23 }}</option></select></label>
+        <button type="button" class="mb mb--tog" data-act="drums" aria-pressed="true">{{ m.drums }}</button>
+      </div>
+      <p class="label" data-ctl="laneLabel">{{ m.groove }}</p>
+      <div class="mans__lanes" data-ctl="lanes"></div>
+    </div>
+  </details>
 
-  <p class="label" data-ctl="laneLabel">{{ m.groove }}</p>
-  <div class="mans__lanes" data-ctl="lanes"></div>
+  <!-- 3 · volume -->
+  <details class="sec" open>
+    <summary><span class="sec__n">03</span>{{ m.sec_volume }}</summary>
+    <div class="sec__body">
+      <p class="sec__note">{{ m.vol_intro }}</p>
+      <div class="mixer" data-ctl="mixer"></div>
+    </div>
+  </details>
+
+  <!-- 4 · break -->
+  <details class="sec" open>
+    <summary><span class="sec__n">04</span>{{ m.sec_break }}</summary>
+    <div class="sec__body brk">
+      <p class="sec__note">{{ m.break_intro }}</p>
+      <div class="brk__row">
+        <div class="brk__solo" role="radiogroup" aria-label="{{ m.soloist }}">
+          <p class="label">1 · {{ m.soloist }}</p>
+          <div class="brk__insts">
+            {%- assign insts = "trumpet,sax,djembe,voice" | split: "," -%}
+            {%- for k in insts %}
+            {%- assign icon = "ic_" | append: k -%}
+            {%- assign iname = "i_" | append: k %}
+            <button type="button" class="brk__inst" role="radio" aria-checked="false" data-solo="{{ k }}">
+              {%- case k -%}{%- when "trumpet" -%}{{ ic_trumpet }}{%- when "sax" -%}{{ ic_sax }}{%- when "djembe" -%}{{ ic_djembe }}{%- else -%}{{ ic_voice }}{%- endcase -%}
+              <span>{{ m[iname] }}</span>
+            </button>
+            {%- endfor %}
+          </div>
+        </div>
+        <div class="brk__go">
+          <p class="label">2 · {{ m.sec_break }}</p>
+          <button type="button" class="chop" data-act="break" aria-label="{{ m.break_go }}">
+            <svg viewBox="0 0 160 160" aria-hidden="true">
+              <g class="chop__trail"><path d="M132 28 L28 132" /></g>
+              <g class="chop__hand">
+                <g transform="rotate(135 0 0)">
+                  <path class="chop__arm" d="M-62 -11 H-4 V11 H-62 Z" />
+                  <path class="chop__palm" d="M-8 -12 H44 Q62 -12 62 0 Q62 12 44 12 H-8 Z" />
+                  <path class="chop__line" d="M6 -4 H50 M6 4 H52" />
+                  <path class="chop__thumb" d="M-2 -12 Q10 -20 26 -14" />
+                </g>
+              </g>
+            </svg>
+            <span class="chop__t">{{ m.break_go }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </details>
 
   <p class="mans__hint">{{ m.hint }}</p>
   <script type="application/json" class="mans__t">{{ m | jsonify }}</script>
