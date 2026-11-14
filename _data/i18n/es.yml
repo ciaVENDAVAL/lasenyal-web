@@ -1,18 +1,14 @@
 meta_description: "La Senyal, ensamble de percusión, vientos y voz de Barcelona que improvisa en directo guiado con señas."
 skip: "Ir al contenido"
-
 nav:
-  home: Inicio
-  members: Equipo
-  concerts: Conciertos
-  hands: Manos
-
+  home: "Inicio"
+  members: "Equipo"
+  concerts: "Conciertos"
+  hands: "Manos"
 tagline: "Improvisación en tiempo real, dirigida con señas."
-
 intro_label: "La banda"
 intro: "La Senyal es un ensamble de percusión, vientos y voz de Barcelona. No hay repertorio fijo: cada concierto se compone en directo, a partir de las señas de quien dirige."
 intro2: "Ritmos afrolatinos —cumbia, candombe, salsa— cruzados con funk y balkan. Para escuchar y, sobre todo, para bailar."
-
 how_label: "Cómo funciona"
 how:
   - t: "Señas"
@@ -22,17 +18,14 @@ how:
   - t: "Invitadxs"
     d: "En cada concierto se suman músicos invitados."
 how_note: "El lenguaje de señas lo creó Santiago Vázquez en Buenos Aires, con La Bomba de Tiempo."
-
 next_label: "Próximos conciertos"
 none_upcoming: "Nuevas fechas muy pronto."
 all_concerts: "Todos los conciertos"
 see_members: "Conoce al equipo"
 watch: "Ver en directo"
 gallery_label: "En directo"
-
 members_title: "Equipo"
 members_intro: "Diez músicos. Tres de ellos también dirigen."
-
 concerts_title: "Conciertos"
 upcoming: "Próximos"
 past: "Pasados"
@@ -41,7 +34,6 @@ superlunes_intro: "Desde 2024 tocamos cada lunes en residencias semanales: un es
 every_monday: "Cada lunes"
 map: "Mapa"
 info: "Info"
-
 contact: "Contacto"
 booking: "Conciertos, festivales y prensa"
 presskit: "Press kit (PDF)"
@@ -49,10 +41,32 @@ lang_label: "Idioma"
 close: "Cerrar"
 prev: "Anterior"
 next: "Siguiente"
-
-months: [enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
-months_short: [ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
-
+months:
+  - "enero"
+  - "febrero"
+  - "marzo"
+  - "abril"
+  - "mayo"
+  - "junio"
+  - "julio"
+  - "agosto"
+  - "septiembre"
+  - "octubre"
+  - "noviembre"
+  - "diciembre"
+months_short:
+  - "ene"
+  - "feb"
+  - "mar"
+  - "abr"
+  - "may"
+  - "jun"
+  - "jul"
+  - "ago"
+  - "sep"
+  - "oct"
+  - "nov"
+  - "dic"
 roles:
   perc_dir: "Percusión y dirección"
   euph_dir: "Bombardino y dirección"
@@ -61,8 +75,6 @@ roles:
   alto: "Saxo alto"
   bari: "Saxo barítono"
   trumpet: "Trompeta"
-
-# Press kit
 pk_title: "Dossier de prensa"
 pk_band: "La banda"
 pk_show: "El directo"
@@ -73,7 +85,6 @@ pk_archive: "Archivo"
 pk_lineup: "Formación"
 pk_video: "Vídeo en directo"
 pk_photo: "Foto"
-
 a11y:
   title: "Accesibilidad"
   light: "Tema claro"
@@ -86,11 +97,8 @@ a11y:
   smaller: "Texto más pequeño"
   bigger: "Texto más grande"
   reset: "Restablecer"
-
 menu: "Menú"
 close_menu: "Cerrar menú"
-
-# Hands game (Mans)
 mans:
   home_label: "Toca"
   home_title: "Toca con las manos"
@@ -169,4 +177,3 @@ mans:
     palmas: "Palmas"
     snare: "Caja"
     hihat: "Hi-hat"
-  rhythms: {}
