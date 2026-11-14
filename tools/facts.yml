@@ -1,0 +1,20 @@
+# Patterns for tools/check.py. Add house-style rules here as they are decided
+# (see the master fact sheet in the claude.ai Project "La Senyal").
+
+# Must never appear in this PUBLIC repo (fees, tax IDs, bank data, private data).
+private:
+  - { pattern: '\b[A-Z]{2}\d{2}(?:\s?\d{4}){5}\b', why: "IBAN / bank account" }
+  - { pattern: '\b(?:NIF|CIF|DNI|NIE)\b', why: "tax / ID number" }
+  - { pattern: '\b\d{8}[A-HJ-NP-TV-Z]\b', why: "DNI-like number" }
+  - { pattern: '\b[XYZ]\d{7}[A-Z]\b', why: "NIE-like number" }
+  - { pattern: '\d[\d.,]*\s?(?:€|EUR\b)|€\s?\d', why: "money amount" }
+  - { pattern: '(?i)\b(?:cach[eé]t?|caché|honorari|fee|pressupost|presupuesto|budget)\b', why: "fee / budget word" }
+
+# Wrong spellings of names (left: wrong pattern, right: correct form).
+spelling:
+  - { pattern: '(?<![Ll]a )\bSenyal\b(?! ·)', correct: "La Senyal", only_in: [_data/i18n], why: "band name always with La" }
+  - { pattern: '\bLa senyal\b', correct: "La Senyal" }
+  - { pattern: '(?i)\bla bomba del tiempo\b', correct: "La Bomba de Tiempo" }
+
+# Words not to use (house style) — none decided yet.
+banned: []

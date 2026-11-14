@@ -79,7 +79,7 @@
         {% capture u %}{% include lang-url.html code=l.code %}{% endcapture %}<a href="{{ u | relative_url }}" hreflang="{{ l.code }}" lang="{{ l.code }}"{% if l.code == page.lang %} aria-current="true"{% endif %}><b>{{ l.label }}</b>{{ l.name }}</a>
         {%- endfor %}
       </div>
-      <p class="menu__foot"><a href="mailto:{{ site.data.site.contact.email }}">{{ site.data.site.contact.email }}</a><a href="{{ site.docs_base }}lasenyal-presskit-{{ page.lang }}.pdf">{{ t.presskit }} ↓</a></p>
+      <p class="menu__foot"><a href="mailto:{{ site.data.site.contact.email }}">{{ site.data.site.contact.email }}</a><a href="{{ site.data.downloads.presskit[page.lang] | relative_url }}">{{ t.presskit }} ↓</a></p>
     </div>
   </header>
 
@@ -97,7 +97,7 @@
         <span class="sep">·</span><a href="tel:{{ ph | remove: ' ' }}">{{ ph }}</a>
         {%- endfor %}
         <span class="sep">·</span><a href="{{ site.data.site.contact.instagram }}" rel="noopener">Instagram</a>
-        <span class="sep">·</span><a href="{{ site.docs_base }}lasenyal-presskit-{{ page.lang }}.pdf">{{ t.presskit }} ↓</a>
+        <span class="sep">·</span><a href="{{ site.data.downloads.presskit[page.lang] | relative_url }}">{{ t.presskit }} ↓</a>
       </p>
     </div>
     <p class="foot__meta">{{ site.data.site.footer_text | default: "La Senyal · Barcelona" }} · {{ site.time | date: "%Y" }}</p>

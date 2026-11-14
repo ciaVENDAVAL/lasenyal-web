@@ -3,7 +3,7 @@
 Website for **La Senyal**, built for **GitHub Pages** (plain Jekyll, no plugins, nothing to install).
 
 **Staging address:** https://ciavendaval.github.io/lasenyal-web/
-PDFs (press kit) go in the sister repo **lasenyal-docs**.
+Public PDFs (press kit) live here in `pdf/`; private work (applications, budgets, contracts) is in the private repo **lasenyal-docs**. Rules: `CLAUDE.md` · how to change a fact everywhere: `UPDATING.md`.
 
 ## What's in it
 
@@ -11,7 +11,7 @@ PDFs (press kit) go in the sister repo **lasenyal-docs**.
 - **Contact** sits small in the footer of every page, with the press kit in the visitor's language.
 - **Photos are local** (`assets/img/sm` = thumbnails, `assets/img/lg` = full size, `assets/img/members` = portraits). Click a photo on the home page to open it full size (arrows, keyboard ← →, swipe, Esc).
 - **Accessibility button** (bottom left, like the other ciaVENDAVAL sites): light theme, stop animations and video, high contrast, underline links, line spacing, easier font, text size. Choices are remembered per browser. The footer keeps a left margin so the button never covers its text.
-- **Press kit:** a hidden page at `/presskit/<lang>/`, printed to PDF by `scripts/presskit.py`.
+- **Press kit:** a hidden page at `/presskit/<lang>/`, printed to PDF by `dossiers/presskit/build.py` into `pdf/`. Short links that never change: `/dossier/ca/`, `/dossier/es/`, `/dossier/en/` (they follow `_data/downloads.yml`).
 
 ## Editing without code: the admin
 
@@ -20,7 +20,7 @@ texts in the three languages (`_data/i18n/`), concerts, members, photo strip, si
 the menu (`_data/menu.yml`), contact/footer/main photos (`_data/site.yml`) and colours/font (`_data/theme.yml`).
 
 - **Photos** uploaded there go to `assets/img/lg/` (or `assets/img/members/`). The workflow
-  `.github/workflows/photos.yml` (`scripts/photos.py`) then makes the `assets/img/sm/` copy, shrinks anything over
+  `.github/workflows/photos.yml` (`tools/photos.py`) first keeps the untouched original in `source-images/`, then makes the `assets/img/sm/` copy, shrinks anything over
   1800 px and crops member photos to 500×500, commits, and asks Pages to rebuild.
 - **Extra pages** use `_layouts/page.html`; their address is `/<name>/` (ES), `/ca/<name>/`, `/en/<name>/`.
 - If you add or rename keys in `_data/i18n/*.yml`, regenerate the admin form: in `lasenyal-admin`,
@@ -66,12 +66,15 @@ Commit. In a minute it shows under **Upcoming** on the home page (next 3) and on
 | Concerts and Superlunes | `_data/concerts.yml` |
 | Members: name, instrument, photo, Instagram | `_data/members.yml` (instrument names are under `roles:` in the language files) |
 | Home photo strip | `_data/gallery.yml` |
-| Email, phones, Instagram, video, page addresses | `_config.yml` |
-| Look & feel | `assets/css/main.css` (colours and fonts at the top) |
+| Email, phones, Instagram, video, footer line, main photos | `_data/site.yml` |
+| Page addresses | `_config.yml` |
+| Menus · colours and font | `_data/menu.yml` · `_data/theme.yml` |
+| Which PDF each short link gives | `_data/downloads.yml` |
+| Look & feel | `assets/css/main.css` |
 | Press kit layout | `_layouts/presskit.html` |
 | Accessibility panel | `_includes/a11y.html`, texts under `a11y:` in the language files |
 
-**Add photos:** save a thumbnail (about 820 px on the long side) in `assets/img/sm/` and a large version (about 1800 px) with the **same name** in `assets/img/lg/`.
+**Add photos:** put the original in `assets/img/lg/` and push (or upload it in the admin): the photo workflow keeps the original in `source-images/` and makes the 820 px copy in `assets/img/sm/`. Credit the photographer in `source-images/README.md`.
 
 **Fonts:** headings use *Archivo Expanded Black* (free, Google Fonts). The old site used a **trial** copy of Druk Text Wide, which is not licensed for a live site. If you buy a Druk web licence, put the files in `assets/fonts/` and change `--display` in `main.css`.
 
@@ -82,10 +85,15 @@ After changing texts, members or concerts:
 ```
 gem install jekyll -v '~> 3.10'
 pip install playwright && playwright install chromium
-python scripts/presskit.py ../lasenyal-docs/pdf
+python3 dossiers/presskit/build.py          # or only some languages: … build.py ca
+python3 tools/check.py
 ```
 
-Then commit and push the PDFs in **lasenyal-docs**.
+This writes `pdf/LaSenyal_<LANG>_presskit_<yyyy-mm>.pdf` and points the short links at it. Update `INDEX.md` in lasenyal-docs, then commit and push. Only rebuild a language whose text changed.
+
+## Before every push
+
+`python3 tools/check.py` → `CHECK-REPORT.md` (missing languages, missing PDFs or photos, outdated contact data in PDFs, private data, spellings). Fix every ERROR.
 
 ## Switch the domain to lasenyal.com (when ready to leave WordPress)
 

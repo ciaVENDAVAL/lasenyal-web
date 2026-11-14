@@ -1,11 +1,13 @@
+{%- comment -%} Redirect page. Either  to: /path/  or  download: <key> + lang  (PDF chosen in _data/downloads.yml). {%- endcomment -%}
+{%- if page.download -%}{%- assign dest = site.data.downloads[page.download][page.lang] -%}{%- else -%}{%- assign dest = page.to -%}{%- endif -%}
 <!doctype html>
 <html lang="{{ page.lang | default: 'es' }}">
 <head>
   <meta charset="utf-8">
-  <title>→ {{ page.to }}</title>
-  <link rel="canonical" href="{{ site.url }}{{ page.to }}">
-  <meta http-equiv="refresh" content="0; url={{ page.to | relative_url }}">
+  <title>→ {{ dest }}</title>
+  <link rel="canonical" href="{{ site.url }}{{ dest }}">
+  <meta http-equiv="refresh" content="0; url={{ dest | relative_url }}">
   <meta name="robots" content="noindex">
 </head>
-<body><a href="{{ page.to | relative_url }}">{{ site.url }}{{ page.to }}</a></body>
+<body><a href="{{ dest | relative_url }}">{{ site.url }}{{ dest }}</a></body>
 </html>

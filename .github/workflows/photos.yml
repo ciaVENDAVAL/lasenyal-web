@@ -33,13 +33,13 @@ jobs:
             : > changed.txt
           fi
           cat changed.txt
-          python scripts/photos.py $(cat changed.txt)
+          python tools/photos.py $(cat changed.txt)
           rm changed.txt
       - name: Commit
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add assets/img
+          git add assets/img source-images
           if git diff --cached --quiet; then echo "Nothing to change"; exit 0; fi
           git -c user.name="photos bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Prepare photos (small copies, sizes)"
           git push

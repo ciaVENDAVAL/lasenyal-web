@@ -1,0 +1,9 @@
+# Which PDF each short link points to. Emails link to the short links, never attach PDFs:
+#   lasenyal.com/dossier/ca/   lasenyal.com/dossier/es/   lasenyal.com/dossier/en/
+# To publish a new version: put the new PDF in pdf/ (or upload it in the admin → "PDFs")
+# and choose it here. The short links follow on their own.
+# File names: LaSenyal_<LANG>_<kind>_<yyyy-mm>.pdf
+presskit:
+  ca: /pdf/LaSenyal_CA_presskit_2026-11.pdf
+  es: /pdf/LaSenyal_ES_presskit_2026-11.pdf
+  en: /pdf/LaSenyal_EN_presskit_2026-11.pdf

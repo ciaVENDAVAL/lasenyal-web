@@ -7,8 +7,8 @@ title: La Senyal
 url: https://ciavendaval.github.io
 baseurl: /lasenyal-web
 
-# PDFs (press kit…) live in the lasenyal-docs repo
-docs_base: https://ciavendaval.github.io/lasenyal-docs/pdf/
+# PDFs (press kit…) live in pdf/ → <site>/pdf/… ; which one each short link
+# (/dossier/<lang>/) points to: _data/downloads.yml
 
 # Languages, in switcher order. ES stays at the root like the old site.
 # "pages" = the address of each page in that language.
@@ -33,7 +33,12 @@ languages:
 
 exclude:
   - README.md
-  - scripts
+  - CLAUDE.md
+  - UPDATING.md
+  - CHECK-REPORT.md
+  - tools
+  - dossiers
+  - source-images
   - preview
   - Gemfile
   - Gemfile.lock
