@@ -1,10 +1,11 @@
 """Change one language, the others follow.
 
 After a push, finds every text that changed in ONE language only (the other languages still have
-their old text) and translates it into the other languages with DeepL, then saves those files.
+their old text) and translates it into the other languages with Softcatalà's open-source neural
+models (run here, no account, no key, no Google/Amazon), then saves those files.
 Texts changed in two or three languages are left alone (someone translated them by hand).
 
-  python3 tools/translate.py <old-commit> [<new-commit>]     (needs DEEPL_API_KEY)
+  python3 tools/translate.py <old-commit>                     (pip install ctranslate2 sentencepiece ruamel.yaml)
   python3 tools/translate.py <old-commit> --dry-run           (shows what it would translate)
 
 Covers: _data/i18n/{ca,es,en}.yml (every text of the site) and the simple pages _extra/<lang>/<name>.md
@@ -19,8 +20,6 @@ from ruamel.yaml.scalarstring import DoubleQuotedScalarString as DQ
 
 ROOT = Path(__file__).resolve().parent.parent
 LANGS = ["ca", "es", "en"]
-DEEPL_TARGET = {"ca": "CA", "es": "ES", "en": "EN-GB"}
-DEEPL_SOURCE = {"ca": "CA", "es": "ES", "en": "EN"}
 FACTS = YAML(typ="safe").load((ROOT / "tools/facts.yml").read_text())
 KEEP = sorted(FACTS.get("do_not_translate") or [], key=len, reverse=True)
 TERMS = FACTS.get("terms") or []
@@ -34,40 +33,103 @@ def git_show(rev, path):
     r = subprocess.run(["git", "show", f"{rev}:{path}"], cwd=ROOT, capture_output=True, text=True)
     return r.stdout if r.returncode == 0 else None
 
-# ---------- DeepL ----------
-def protect(text, src):
-    """Wrap names, terms and {placeholders} in tags DeepL leaves alone."""
-    t = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    t = re.sub(r"\{(\w+)\}", r'<ph n="\1"/>', t)
-    for i, term in enumerate(TERMS):
-        if term.get(src): t = re.sub(rf"(?<!\w){re.escape(term[src])}(?!\w)", f'<term n="{i}"/>', t)
-    for i, k in enumerate(KEEP):
-        t = re.sub(rf"(?<!\w){re.escape(k)}(?!\w)", f'<keep n="{i}"/>', t)
-    return t
+# ---------- translation engine: Softcatalà's open neural models (no Google, no Amazon) ----------
+# https://github.com/Softcatala/nmt-models — MIT licence, the same models as softcatala.org/traductor,
+# downloaded from softcatala.org and run here with CTranslate2. CA↔ES and CA↔EN directly; ES↔EN via CA.
+import unicodedata, zipfile, shutil
+MODELS = {"cat-eng": "cat-eng-2024-09-29", "eng-cat": "eng-cat-2024-09-24",
+          "cat-spa": "cat-spa-2022-11-17", "spa-cat": "spa-cat-2022-11-16"}
+MODEL_URL = "https://www.softcatala.org/pub/softcatala/opennmt/models/2022-11-22/{}.zip"
+CODE = {"ca": "cat", "es": "spa", "en": "eng"}
+MODELS_DIR = Path(os.environ.get("NMT_MODELS", Path.home() / ".cache/lasenyal-nmt"))
+_loaded = {}
 
-def unprotect(text, dst):
-    t = re.sub(r'<keep n="(\d+)"\s*/>', lambda m: KEEP[int(m.group(1))], text)
-    t = re.sub(r'<term n="(\d+)"\s*/>', lambda m: TERMS[int(m.group(1))][dst], t)
-    t = re.sub(r'<ph n="(\w+)"\s*/>', r"{\1}", t)
-    return t.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
+def model(pair):
+    if pair in _loaded: return _loaded[pair]
+    import ctranslate2, sentencepiece as spm
+    d = MODELS_DIR / pair
+    if not (d / "ctranslate2").exists():
+        MODELS_DIR.mkdir(parents=True, exist_ok=True)
+        z = MODELS_DIR / f"{pair}.zip"
+        print(f"downloading model {MODELS[pair]} …", flush=True)
+        urllib.request.urlretrieve(MODEL_URL.format(MODELS[pair]), z)
+        with zipfile.ZipFile(z) as zf:
+            for n in zf.namelist():
+                parts = n.split("/")
+                if len(parts) > 1 and parts[1] in ("ctranslate2", "tokenizer") and not n.endswith("/"):
+                    out = d / "/".join(parts[1:]); out.parent.mkdir(parents=True, exist_ok=True)
+                    with zf.open(n) as src, open(out, "wb") as dst: shutil.copyfileobj(src, dst)
+        z.unlink()
+    _loaded[pair] = (ctranslate2.Translator(str(d / "ctranslate2"), device="cpu", inter_threads=2),
+                     spm.SentencePieceProcessor(model_file=str(d / "tokenizer" / "sp_m.model")))
+    return _loaded[pair]
 
-def deepl(texts, src, dst):
-    key = os.environ.get("DEEPL_API_KEY", "").strip()
-    if not key: raise SystemExit("DEEPL_API_KEY is not set")
-    url = "https://api-free.deepl.com/v2/translate" if key.endswith(":fx") else "https://api.deepl.com/v2/translate"
-    body = {"text": [protect(t, src) for t in texts], "source_lang": DEEPL_SOURCE[src], "target_lang": DEEPL_TARGET[dst],
-            "tag_handling": "xml", "ignore_tags": ["keep", "term", "ph"], "preserve_formatting": True,
-            "model_type": "prefer_quality_optimized"}
-    for attempt in range(2):
-        req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST",
-                                     headers={"Authorization": f"DeepL-Auth-Key {key}", "Content-Type": "application/json"})
-        try:
-            with urllib.request.urlopen(req, timeout=60) as r:
-                return [unprotect(x["text"], dst) for x in json.load(r)["translations"]]
-        except urllib.error.HTTPError as e:
-            msg = e.read().decode()[:300]
-            if e.code == 400 and "model_type" in body: body.pop("model_type"); continue   # plan without model choice
-            raise SystemExit(f"DeepL {e.code}: {msg}")
+SYMBOL = re.compile(r"([\U0001F000-\U0001FAFF\u2600-\u27BF\uFE0F\u200D]+)")   # emoji runs: kept as they are
+SENT = re.compile(r"(?<=[.!?…])\s+(?=[\"«“¿¡(]?[A-ZÀ-ÖØ-Þ0-9])")
+
+def _raw(pair, sentences):
+    tr, sp = model(pair)
+    batch = [sp.encode(t, out_type=str) for t in sentences]
+    res = tr.translate_batch(batch, beam_size=4, max_decoding_length=512)
+    return [sp.decode(r.hypotheses[0]) for r in res]
+
+def _fix_unknown(src, out):
+    """The English model can't write some letters (e.g. á) and prints ⁇: copy those words from the source."""
+    if "⁇" not in out: return out
+    out = re.sub(r"\s*⁇\s*", "⁇", out)
+    words = re.findall(r"[\w'’·-]+", src)
+    def repl(m):
+        tok = m.group(0)
+        pat = re.compile("^" + ".+?".join(re.escape(x) for x in tok.split("⁇")) + "$")
+        return next((w for w in words if pat.match(w)), tok.replace("⁇", ""))
+    return re.sub(r"[\w'’·-]*⁇[\w'’·-]*", repl, out)
+
+def translate_line(text, src, dst):
+    """One line of plain text (no markdown): keeps emojis, names, {placeholders}, sentence by sentence."""
+    if not text.strip(): return text
+    lead, core, trail = re.match(r"^(\s*)(.*?)(\s*)$", text, re.S).groups()
+    parts = SYMBOL.split(core)
+    out = []
+    for i, part in enumerate(parts):
+        if i % 2 or not part.strip(): out.append(part); continue
+        l2, mid, t2 = re.match(r"^(\s*)(.*?)(\s*)$", part, re.S).groups()
+        holds = {}
+        def hold(v):
+            k = f"Zq{len(holds)}x"; holds[k] = v; return k
+        # links and **bold**/*italic* are translated on their own and put back; addresses, {n}, 6 × 4… stay
+        m = re.sub(r"\[([^\]]*)\](\([^)]*\))", lambda x: hold(f"[{translate_line(x.group(1), src, dst)}]{x.group(2)}"), mid)
+        m = re.sub(r"(\*\*|__|\*)(?=\S)(.+?)(?<=\S)\1", lambda x: hold(f"{x.group(1)}{translate_line(x.group(2), src, dst)}{x.group(1)}"), m)
+        m = re.sub(r"\{\w+\}|\d+(?:[.,]\d+)?\s*[×x]\s*\d+(?:[.,]\d+)?|https?://[^\s)]+|`[^`]*`", lambda x: hold(x.group(0)), m)
+        for term in TERMS:
+            if term.get(src) and term.get(dst): m = re.sub(rf"(?<!\w){re.escape(term[src])}(?!\w)", term[dst], m)
+        sents = SENT.split(m)
+        pair_path = [(src, dst)] if "ca" in (src, dst) else [(src, "ca"), ("ca", dst)]
+        res = sents
+        for a, b in pair_path:
+            prev = res
+            res = _raw(f"{CODE[a]}-{CODE[b]}", res)
+            res = [_fix_unknown(p, r) for p, r in zip(prev, res)]
+        t = " ".join(res)
+        for k, v in holds.items():
+            if k in t: t = t.replace(k, v)
+            else: t = re.sub(re.escape(k[:-1]) + r"\s*x?", v, t, flags=re.I) if re.search(re.escape(k[:-1]), t, re.I) else t + " " + v
+        for k in KEEP:   # names must come out exactly as written
+            if k in mid and k not in t:
+                loose = re.compile(r"\s*".join(re.escape(w) for w in k.split()), re.I)
+                t = loose.sub(k, t)
+        out.append(l2 + t + t2)
+    return lead + "".join(out) + trail
+
+def translate_markdown(text, src, dst):
+    """Line by line; list/heading/quote markers are kept, links keep their address (see translate_line)."""
+    lines = []
+    for line in text.split("\n"):
+        prefix, rest = re.match(r"^(\s*(?:#{1,6}\s+|[-*+]\s+|\d+[.)]\s+|>\s*)*)(.*)$", line).groups()
+        lines.append(prefix + (translate_line(rest, src, dst) if rest.strip() else rest))
+    return "\n".join(lines)
+
+def translate(texts, src, dst):
+    return [translate_markdown(t, src, dst) if "\n" in t else translate_line(t, src, dst) for t in texts]
 
 # ---------- site texts ----------
 def leaves(x, path=()):
@@ -106,7 +168,7 @@ def i18n(old_rev, dry):
         texts = [get(new[src], p) for p in paths]
         for dst in LANGS:
             if dst == src: continue
-            out = texts if dry else deepl(texts, src, dst)
+            out = texts if dry else translate(texts, src, dst)
             for p, t in zip(paths, out):
                 if not dry: put(docs[dst], p, DQ(t))
                 done.append(f"{'.'.join(map(str, p))}: {src.upper()} → {dst.upper()}")
@@ -141,7 +203,7 @@ def pages(old_rev, dry):
         texts = [fm[k] for k in FM_KEYS if isinstance(fm.get(k), str) and fm[k].strip()] + ([body] if body.strip() else [])
         for dst in LANGS:
             if dst == src: continue
-            out = texts if dry else deepl(texts, src, dst)
+            out = texts if dry else translate(texts, src, dst)
             dfm, _ = split_md(cur[dst]) if cur[dst] else ({}, "")
             nfm = dict(fm); nfm.update({k: v for k, v in dfm.items() if k not in FM_KEYS})  # keep the other page's own image etc.
             i = 0
@@ -155,6 +217,9 @@ def pages(old_rev, dry):
     return done
 
 if __name__ == "__main__":
+    if "--download" in sys.argv:          # fetch all models once (the workflow caches them)
+        for pair in MODELS: model(pair)
+        raise SystemExit(0)
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     dry = "--dry-run" in sys.argv
     if not args: raise SystemExit(__doc__)

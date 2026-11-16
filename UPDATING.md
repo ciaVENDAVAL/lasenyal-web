@@ -3,7 +3,7 @@
 1. **Fact sheet first.** Update `master/LA SENYAL master fact sheet.md` in the claude.ai Project *La Senyal*
    (read it right before writing — other sessions may have changed it). "Just collect" = only the sheet, nothing else.
 2. **Then every place that uses it**, in CA, ES and EN. (Website texts changed in one language only are translated
-   into the others automatically by DeepL — check the result; to write all three by hand, change them in one commit.) Use the table below.
+   into the others automatically (Softcatalà open models) — check the result; to write all three by hand, change them in one commit.) Use the table below.
 3. **PDFs** that contain the fact: rebuild (`python3 dossiers/presskit/build.py`), then update `INDEX.md` in lasenyal-docs.
 4. `python3 tools/check.py` — no ERROR. Commit, push, and list what changed (to tyle and in the session log).
 

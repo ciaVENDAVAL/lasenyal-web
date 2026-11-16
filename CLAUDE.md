@@ -27,7 +27,7 @@ The booking email and phones in `_data/site.yml` are the band's public contact, 
 
 ## Languages
 CA · ES · EN, always all three and consistent. A text changed in only ONE language is auto-translated into the
-other two by DeepL after the push (`tools/translate.py`); when you translate by hand, change all three in the same
+other two after the push (Softcatalà open models, run in the workflow) (`tools/translate.py`); when you translate by hand, change all three in the same
 commit (or add `[no-translate]` to the message). Tell tyle when something exists in one language and not the others.
 ES is at the root (`/`), CA at `/ca/`, EN at `/en/`.
 

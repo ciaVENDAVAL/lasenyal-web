@@ -1,5 +1,6 @@
-# Change one language, the others follow: texts changed in only one language are translated
-# into the other two with DeepL (tools/translate.py). Needs the repository secret DEEPL_API_KEY.
+# Change one language, the others follow: texts changed in only one language are translated into the
+# other two with Softcatalà's open-source neural models, run right here (tools/translate.py).
+# No account, no key, no Google, no Amazon. Models: https://github.com/Softcatala/nmt-models (MIT).
 # Put [no-translate] in a commit message to skip (the on-page editor does it when its switch is off).
 name: Translate
 on:
@@ -17,6 +18,8 @@ jobs:
   translate:
     if: ${{ !contains(github.event.head_commit.message, '[no-translate]') }}
     runs-on: ubuntu-latest
+    env:
+      NMT_MODELS: ${{ github.workspace }}/../nmt-models
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,14 +27,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install ruamel.yaml
+      - run: pip install ruamel.yaml ctranslate2 sentencepiece
+      - name: Models (downloaded from softcatala.org once, then kept in the cache)
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/../nmt-models
+          key: softcatala-nmt-2024-09-v1
+      - run: python tools/translate.py --download
       - name: Translate
         env:
-          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
           BEFORE: ${{ github.event.before }}
           TRANSLATED_LIST: /tmp/translated.txt
         run: |
-          if [ -z "$DEEPL_API_KEY" ]; then echo "::warning::No DEEPL_API_KEY secret: nothing translated"; exit 0; fi
           if [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE" 2>/dev/null; then BEFORE=HEAD~1; fi
           python tools/translate.py "$BEFORE"
       - name: Commit
@@ -40,7 +47,7 @@ jobs:
         run: |
           git add _data/i18n _extra
           if git diff --cached --quiet; then echo "Nothing translated"; exit 0; fi
-          { echo "Auto-translate (DeepL) — please check"; echo; cat /tmp/translated.txt; } > /tmp/msg.txt
+          { echo "Auto-translate (Softcatalà) — please check"; echo; cat /tmp/translated.txt; } > /tmp/msg.txt
           git -c user.name="translate bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -F /tmp/msg.txt
           git pull --rebase origin main && git push
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

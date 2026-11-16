@@ -8,7 +8,7 @@ private:
   - { pattern: '\b\d{8}[A-HJ-NP-TV-Z]\b', why: "DNI-like number" }
   - { pattern: '\b[XYZ]\d{7}[A-Z]\b', why: "NIE-like number" }
   - { pattern: '\d[\d.,]*\s?(?:€|EUR\b)|€\s?\d', why: "money amount" }
-  - { pattern: '(?i)\b(?:cach[eé]t?|caché|honorari|fee|pressupost|presupuesto|budget)\b', why: "fee / budget word" }
+  - { pattern: '(?i)\b(?:cachet|caché|catxet|honoraris?|fee|fees|pressupost|presupuesto|budget)(?!\w)', why: "fee / budget word" }
 
 # Wrong spellings of names (left: wrong pattern, right: correct form).
 spelling:
@@ -19,7 +19,7 @@ spelling:
 # Words not to use (house style) — none decided yet.
 banned: []
 
-# Auto-translation (tools/translate.py, DeepL): never translated, kept exactly as written.
+# Auto-translation (tools/translate.py, Softcatalà models): never translated, kept exactly as written.
 do_not_translate:
   - La Senyal
   - La Bomba de Tiempo
