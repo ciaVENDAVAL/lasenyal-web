@@ -9,8 +9,8 @@
   --green: #0a733b;
   --line: rgb(240 237 235 / .14);
 
-  --display: "Archivo", "Arial Black", sans-serif;   /* wide heavy, stands in for Druk Text Wide */
-  --body: "Questrial", system-ui, sans-serif;
+  --display: "Unbounded", "Arial Black", sans-serif;  /* wide heavy titles (assets/css/fonts.css) */
+  --body: "Satoshi", system-ui, sans-serif;
   --mono: "Fragment Mono", ui-monospace, monospace;
 
   --pad: clamp(1rem, 4vw, 3rem);

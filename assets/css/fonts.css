@@ -1,0 +1,14 @@
+/* Fonts served from this site (no Google Fonts). Licences next to the files in assets/fonts/.
+   Titles: Unbounded (NaN, OFL) · Text: Satoshi (default) or Switzer / General Sans (Fontshare FFL), Inter (OFL)
+   · Labels: Fragment Mono (Wei Huang, OFL). The text font is chosen in the admin → Look. */
+@font-face { font-family: "Unbounded"; src: url("../fonts/Unbounded.woff2") format("woff2"); font-weight: 200 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("../fonts/Satoshi-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("../fonts/Satoshi-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("../fonts/Satoshi-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Switzer"; src: url("../fonts/Switzer-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Switzer"; src: url("../fonts/Switzer-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "General Sans"; src: url("../fonts/GeneralSans-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "General Sans"; src: url("../fonts/GeneralSans-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("../fonts/Inter-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("../fonts/Inter-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Fragment Mono"; src: url("../fonts/FragmentMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }

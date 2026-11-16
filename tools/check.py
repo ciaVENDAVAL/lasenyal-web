@@ -94,7 +94,7 @@ skip = ("tools/facts.yml", "CHECK-REPORT.md", "Gemfile.lock")
 texts = [f for f in files if f.endswith((".yml", ".md", ".html", ".js", ".txt", ".json", ".css")) and f not in skip]
 for f in texts:
     s = (ROOT / f).read_text(errors="ignore")
-    rules_doc = f in ("CLAUDE.md", "README.md", "UPDATING.md")  # they name the forbidden things on purpose
+    rules_doc = f in ("CLAUDE.md", "README.md", "UPDATING.md") or f.startswith("assets/fonts/")  # rules and font licences name these words on purpose
     for r in ([] if rules_doc else facts.get("private", [])):
         for m in re.finditer(r["pattern"], s):
             line = s[:m.start()].count("\n") + 1

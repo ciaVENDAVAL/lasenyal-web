@@ -28,9 +28,8 @@
   <meta name="theme-color" content="{{ th.background | default: '#0C0404' }}">
   <link rel="icon" href="{{ '/assets/img/favicon.png' | relative_url }}">
   <link rel="apple-touch-icon" href="{{ '/assets/img/apple-touch-icon.png' | relative_url }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800;125,900&family=Fragment+Mono&family=Questrial{% if th.body_font and th.body_font != 'Questrial' %}&family={{ th.body_font | replace: ' ', '+' }}:wght@400;700{% endif %}&display=swap">
+  <link rel="preload" href="{{ '/assets/fonts/Unbounded.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ '/assets/css/fonts.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <style>:root{
     {%- if th.background %}--bg:{{ th.background }};{% endif %}
@@ -38,7 +37,7 @@
     {%- if th.headings %}--ink:{{ th.headings }};{% endif %}
     {%- if th.accent %}--pink:{{ th.accent }};{% endif %}
     {%- if th.box %}--green:{{ th.box }};{% endif %}
-    {%- if th.body_font and th.body_font != 'Questrial' %}--body:"{{ th.body_font }}",system-ui,sans-serif;{% endif -%}
+    {%- if th.body_font and th.body_font != 'Satoshi' %}--body:"{{ th.body_font }}",system-ui,sans-serif;{% endif -%}
   }</style>
   <script>try{var a=JSON.parse(localStorage.getItem("ls-a11y")||"{}"),h=document.documentElement;Object.keys(a).forEach(function(k){if(k==="size")h.style.setProperty("--fs",a[k]);else if(a[k])h.classList.add("a11y-"+k)})}catch(e){}</script>
 </head>

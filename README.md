@@ -85,7 +85,7 @@ Commit. In a minute it shows under **Upcoming** on the home page (next 3) and on
 
 **Add photos:** put the original in `assets/img/lg/` and push (or upload it in the admin): the photo workflow keeps the original in `source-images/` and makes the 820 px copy in `assets/img/sm/`. Credit the photographer in `source-images/README.md`.
 
-**Fonts:** headings use *Archivo Expanded Black* (free, Google Fonts). The old site used a **trial** copy of Druk Text Wide, which is not licensed for a live site. If you buy a Druk web licence, put the files in `assets/fonts/` and change `--display` in `main.css`.
+**Fonts:** all served from this site, nothing from Google: titles *Unbounded* (NaN, OFL), text *Satoshi* (Fontshare; the admin → Look can switch to Switzer, General Sans or Inter), labels *Fragment Mono* (OFL). Files and licences in `assets/fonts/`, `@font-face` in `assets/css/fonts.css`. The old site used a **trial** copy of Druk Text Wide, which is not licensed for a live site.
 
 ## Update the press kit PDFs
 
