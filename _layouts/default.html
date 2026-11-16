@@ -96,6 +96,7 @@
         <span class="sep">·</span><a href="tel:{{ ph | remove: ' ' }}">{{ ph }}</a>
         {%- endfor %}
         <span class="sep">·</span><a href="{{ site.data.site.contact.instagram }}" rel="noopener">Instagram</a>
+        {%- if site.data.site.contact.peertube %}<span class="sep">·</span><a href="{{ site.data.site.contact.peertube }}" rel="noopener me">PeerTube</a>{% endif %}
         <span class="sep">·</span><a href="{{ site.data.downloads.presskit[page.lang] | relative_url }}">{{ t.presskit }} ↓</a>
       </p>
     </div>

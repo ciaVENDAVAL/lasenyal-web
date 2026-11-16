@@ -180,6 +180,7 @@
     </div>
     {%- for ph in site.data.site.contact.phones %}<span class="v">{{ ph }}</span>{% endfor %}
     <a class="v" href="{{ site.data.site.contact.instagram }}">Instagram ↗</a>
+    {%- if site.data.site.contact.peertube %}<a class="v" href="{{ site.data.site.contact.peertube }}">PeerTube ↗</a>{% endif %}
     <a class="v r" href="{{ site.url }}{{ site.baseurl }}{{ L.pages.home }}">Web ↗</a>
   </div>
 </section>
