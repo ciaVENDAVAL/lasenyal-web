@@ -1,4 +1,4 @@
-/* La Senyal — edit on the page.
+/* Edit on the page (made for La Senyal, reusable on any static site: see the settings below).
    Open any page with #edit at the end of the address (or the "Edit on the page" button in the admin).
    Tap a text to change it, tap a photo or a PDF link to replace it, then "Publish".
    Saves straight to GitHub (ciaVENDAVAL/lasenyal-web, main) in one commit; the site updates in 1–2 minutes.
@@ -6,11 +6,45 @@
    needs to be marked. Loaded only in edit mode (see the loader at the end of _layouts/default.html). */
 import { parseDocument, isScalar } from "https://cdn.jsdelivr.net/npm/yaml@2.9.1/browser/index.js";
 
-const CFG = Object.assign({ repo: "ciaVENDAVAL/lasenyal-web", branch: "main", base: "", lang: "es" }, window.LS_EDIT || {});
+/* Settings: every site sets window.LS_EDIT before loading this file (see the loader in _layouts/default.html).
+   Only repo, base and lang are needed; the rest has defaults that fit a Jekyll site like lasenyal-web.
+     repo      "owner/name" of the site's GitHub repo        branch   "main"
+     base      the site's baseurl ("" or "/name")            lang     language of this page ("ca", "es", "en"…)
+     files     data files whose texts become editable; "{lang}" = this page's language. YAML (.yml) or JSON (.json)
+     skip      keys never edited as text (paths, links, dates…)
+     img       { root, small, large }: images under root are replaceable; a small copy maps to its large original
+     pdf       { downloads, name, short } or null: the file that says which PDF each short link gives,
+               the name for a new PDF ({LANG} {lang} {kind} {yyyy-mm}) and the short link pattern
+     admin     link shown when asking for the token */
+const CFG = Object.assign({
+  repo: "ciaVENDAVAL/lasenyal-web", branch: "main", base: "", lang: "es",
+  files: ["_data/i18n/{lang}.yml", "_data/members.yml", "_data/concerts.yml", "_data/site.yml", "_data/gallery.yml", "_data/downloads.yml"],
+  skip: ["photo", "f", "o", "map", "link", "role", "date", "end", "time", "residency", "label", "instagram", "video", "rhythms", "images"],
+  img: { root: "/assets/img/", small: "/assets/img/sm/", large: "/assets/img/lg/" },
+  pdf: { downloads: "_data/downloads.yml", name: "/pdf/LaSenyal_{LANG}_{kind}_{yyyy-mm}.pdf", short: "/dossier/{lang}/" },
+  admin: "https://ciavendaval.github.io/lasenyal-admin/",
+}, window.LS_EDIT || {});
 const API = "https://api.github.com/repos/" + CFG.repo;
 const LANG_UP = CFG.lang.toUpperCase();
-const SKIP_KEYS = new Set(["photo", "f", "o", "map", "link", "role", "date", "end", "time", "residency", "label", "instagram", "video", "rhythms", "images"]);
-const TEXT_FILES = () => [`_data/i18n/${CFG.lang}.yml`, "_data/members.yml", "_data/concerts.yml", "_data/site.yml", "_data/gallery.yml", "_data/downloads.yml"];
+const SKIP_KEYS = new Set(CFG.skip);
+const TEXT_FILES = () => CFG.files.map(f => f.replace("{lang}", CFG.lang));
+const DL = CFG.pdf && CFG.pdf.downloads;
+/* YAML keeps its comments and quotes; JSON keeps its indentation */
+const isJson = f => f.endsWith(".json");
+const parse = (f, text) => isJson(f) ? JSON.parse(text) : parseDocument(text).toJS();
+function rewrite(file, text, edits) {
+  if (isJson(file)) {
+    const data = JSON.parse(text), indent = (text.match(/\n( +|\t)"/) || [, "  "])[1];
+    for (const e of edits) { let o = data; for (const k of e.path.slice(0, -1)) o = o[k]; o[e.path.at(-1)] = e.value; }
+    return JSON.stringify(data, null, indent) + (text.endsWith("\n") ? "\n" : "");
+  }
+  const doc = parseDocument(text);
+  for (const e of edits) {
+    const node = doc.getIn(e.path, true);
+    if (isScalar(node)) { node.value = e.value; node.type = "QUOTE_DOUBLE"; } else doc.setIn(e.path, e.value);
+  }
+  return doc.toString({ lineWidth: 0 });
+}
 
 const T = {
   ca: { bar: "Editant", changes: n => n === 1 ? "1 canvi" : `${n} canvis`, publish: "Publica", exit: "Surt", photos: "Fotos", help: "Toca un text per canviar-lo. Toca una foto o un enllaç PDF per substituir-lo. Després, «Publica».", tokenTitle: "Inicia sessió", tokenText: "Enganxa el teu token de GitHub (el mateix de l'admin).", save: "Desa", cancel: "Cancel·la", replacePhoto: "Tria una foto nova", replacePdf: "Tria un PDF nou", usedIn: "S'usa a", photoNote: "La foto nova substitueix aquesta a tot el web (mateix nom de fitxer). La còpia petita es fa sola.", pdfNote: "El PDF nou es desa com a", places: "Aquest text és a diversos llocs. Canvia'l a:", publishing: "Publicant…", published: "Publicat! Es veurà al web en 1–2 minuts.", error: "No s'ha pogut publicar", leave: "Tens canvis sense publicar.", none: "Res a publicar.", close: "Tanca", noPhotos: "No hi ha fotos en aquesta pàgina.", translate: "Tradueix", translateHint: "Els textos canviats en un idioma es tradueixen sols als altres (traductor lliure de Softcatalà). Desmarca-ho per corregir només aquest idioma.", translating: "Els altres idiomes es tradueixen sols en uns minuts." },
@@ -54,7 +88,7 @@ async function restorePending() {
 }
 function showBin(path) {
   const { url } = binEdits.get(path), name = path.split("/").pop();
-  if (path.startsWith("/pdf/")) { document.querySelectorAll("a.ls-pdf").forEach(a => { const i = pdfInfo(a); if (i && textEdits.get(key("_data/downloads.yml", [i.kind, i.lang]))?.value === path) { a.classList.add("ls-changed"); a.dataset.lsNew = url; } }); return; }
+  if (/\.pdf$/i.test(path)) { document.querySelectorAll("a.ls-pdf").forEach(a => { const i = pdfInfo(a); if (i && textEdits.get(key(DL, [i.kind, i.lang]))?.value === path) { a.classList.add("ls-changed"); a.dataset.lsNew = url; } }); return; }
   document.querySelectorAll("img").forEach(i => { if ((i.currentSrc || i.src).split("/").pop().split("?")[0] === name) { i.src = url; i.srcset = ""; i.classList.add("ls-changed"); } });
   document.querySelectorAll("[data-lg], a[href]").forEach(a => { if ((a.dataset.lg || "").endsWith("/" + name)) a.dataset.lg = url; if (a.getAttribute("href")?.endsWith("/" + name)) a.href = url; });
 }
@@ -100,7 +134,7 @@ function walk(x, path, file) {
 async function load() {
   const sha = await headSha();
   await Promise.all(TEXT_FILES().map(async f => {
-    try { const text = await readFile(f, sha); sources[f] = { text, data: parseDocument(text).toJS() }; } catch (e) { console.warn("edit: cannot read", f, e); }
+    try { const text = await readFile(f, sha); sources[f] = { text, data: parse(f, text) }; } catch (e) { console.warn("edit: cannot read", f, e); }
   }));
   for (const [f, s] of Object.entries(sources)) walk(s.data, [], f);
 }
@@ -139,8 +173,8 @@ function markTexts() {
 }
 const imgPath = img => {
   const p = repoPath(img.currentSrc || img.src);
-  if (!p.startsWith("/assets/img/")) return null;
-  return p.replace("/assets/img/sm/", "/assets/img/lg/");
+  if (!p.startsWith(CFG.img.root)) return null;
+  return CFG.img.small && CFG.img.large ? p.replace(CFG.img.small, CFG.img.large) : p;
 };
 function markMedia() {
   document.querySelectorAll("img").forEach(img => { if (!img.closest(UI_SEL) && imgPath(img)) img.classList.add("ls-img"); });
@@ -152,9 +186,10 @@ function markMedia() {
 }
 function pdfInfo(a) {
   const p = repoPath(a.href);
-  const dl = sources["_data/downloads.yml"]?.data || {};
+  if (!DL) return null;
+  const dl = sources[DL]?.data || {};
   for (const [kind, per] of Object.entries(dl)) for (const [lang, f] of Object.entries(per || {})) {
-    if (p === f || p === `/dossier/${lang}/` && kind === "presskit") return { kind, lang, current: f };
+    if (p === f || (CFG.pdf.short && kind === "presskit" && p === CFG.pdf.short.replace("{lang}", lang))) return { kind, lang, current: f };
   }
   return null;
 }
@@ -223,7 +258,7 @@ function photoDialog(img) {
 function pdfDialog(a) {
   const info = pdfInfo(a);
   const stamp = new Date().toISOString().slice(0, 7);
-  const target = `/pdf/LaSenyal_${info.lang.toUpperCase()}_${info.kind}_${stamp}.pdf`;
+  const target = CFG.pdf.name.replace("{LANG}", info.lang.toUpperCase()).replace("{lang}", info.lang).replace("{kind}", info.kind).replace("{yyyy-mm}", stamp);
   const input = el("input", { type: "file", accept: "application/pdf,.pdf", hidden: "" });
   const span = a.querySelector(".ls-t"), s = span && spans[span.dataset.lsIdx];
   const textBox = s ? el("input", { type: "text", value: s.value, "aria-label": "text" }) : null;
@@ -232,14 +267,14 @@ function pdfDialog(a) {
     el("h2", {}, `${info.kind} · ${info.lang.toUpperCase()}`),
     ...(textBox ? [textBox] : []),
     el("p", {}, [el("a", { href: a.dataset.lsNew || a.href, target: "_blank", rel: "noopener" }, info.current.split("/").pop())]),
-    el("p", { class: "ls-small" }, `${T.pdfNote} ${target.split("/").pop()}. Short link: /dossier/${info.lang}/`),
+    el("p", { class: "ls-small" }, `${T.pdfNote} ${target.split("/").pop()}.` + (CFG.pdf.short ? ` Short link: ${CFG.pdf.short.replace("{lang}", info.lang)}` : "")),
     el("div", { class: "ls-row" }, [btn(T.replacePdf, () => input.click(), true), btn(T.close, () => d.close())]), input,
   ]);
   d.addEventListener("close", saveText);
   input.addEventListener("change", () => {
     const f = input.files[0]; if (!f) return;
     binEdits.set(target, { file: f, url: URL.createObjectURL(f) }); saveBin(target, f);
-    textEdits.set(key("_data/downloads.yml", [info.kind, info.lang]), { file: "_data/downloads.yml", path: [info.kind, info.lang], value: target }); saveTexts();
+    textEdits.set(key(DL, [info.kind, info.lang]), { file: DL, path: [info.kind, info.lang], value: target }); saveTexts();
     showBin(target); update(); d.close();
   });
 }
@@ -261,12 +296,8 @@ async function publish() {
     const byFile = {};
     for (const e of textEdits.values()) (byFile[e.file] ||= []).push(e);
     for (const [file, edits] of Object.entries(byFile)) {
-      const doc = parseDocument(await readFile(file, parent));   // fresh copy: keeps edits made meanwhile in the admin
-      for (const e of edits) {
-        const node = doc.getIn(e.path, true);
-        if (isScalar(node)) { node.value = e.value; node.type = "QUOTE_DOUBLE"; } else doc.setIn(e.path, e.value);
-      }
-      tree.push({ path: file, content: doc.toString({ lineWidth: 0 }) });
+      // fresh copy of the file: keeps edits made meanwhile in the admin
+      tree.push({ path: file, content: rewrite(file, await readFile(file, parent), edits) });
     }
     for (const [path, { file }] of binEdits) {
       const blob = await (await gh("/git/blobs", { method: "POST", body: JSON.stringify({ content: await b64file(file), encoding: "base64" }) })).json();
@@ -280,10 +311,10 @@ async function publish() {
     const files = tree.map(t => t.path.split("/").pop()).join(", ");
     const commit = await (await gh("/git/commits", { method: "POST", body: JSON.stringify({ message: `Edit on page: ${files}${translateOn() ? "" : " [no-translate]"}`, tree: newTree.sha, parents: [parent] }) })).json();
     await gh(`/git/refs/heads/${CFG.branch}`, { method: "PATCH", body: JSON.stringify({ sha: commit.sha }) });
-    const hadTexts = [...textEdits.values()].some(e => e.file.startsWith("_data/i18n/"));
+    const hadTexts = [...textEdits.values()].some(e => CFG.files[0].includes("{lang}") && e.file !== DL);
     textEdits.clear(); binEdits.clear(); spans.forEach(x => { x.changed = false; x.keys = []; }); await clearPending();
     document.querySelectorAll(".ls-changed").forEach(x => x.classList.remove("ls-changed"));
-    for (const f of Object.keys(byFile)) { const text = await readFile(f, commit.sha); sources[f] = { text, data: parseDocument(text).toJS() }; }
+    for (const f of Object.keys(byFile)) { const text = await readFile(f, commit.sha); sources[f] = { text, data: parse(f, text) }; }
     toast(T.published + (hadTexts && translateOn() ? " " + T.translating : ""), 9000);
   } catch (e) {
     console.error(e); toast(`${T.error}: ${e.message}`, 12000);
@@ -380,7 +411,7 @@ async function askToken() {
   return new Promise(res => {
     const input = el("input", { type: "password", autocomplete: "off", placeholder: "github_pat_…" });
     const d = dialog([el("h2", {}, T.tokenTitle), el("p", {}, T.tokenText), input,
-      el("p", { class: "ls-small" }, [el("a", { href: "https://ciavendaval.github.io/lasenyal-admin/", target: "_blank", rel: "noopener" }, "lasenyal-admin")]),
+      el("p", { class: "ls-small" }, [el("a", { href: CFG.admin, target: "_blank", rel: "noopener" }, CFG.admin.replace(/^https?:\/\//, ""))]),
       el("div", { class: "ls-row" }, [btn(T.cancel, () => { d.close(); res(null); }), btn(T.save, () => { const v = input.value.trim(); d.close(); res(v || null); }, true)])]);
   });
 }

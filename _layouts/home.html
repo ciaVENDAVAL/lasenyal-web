@@ -18,8 +18,17 @@ layout: default
   </div>
 </section>
 
-{%- assign yt = site.data.site.contact.video | split: "v=" | last -%}
-<section class="video" data-yt="{{ yt }}" aria-label="{{ t.watch }}">
+{%- comment -%} Video: a PeerTube link (…/w/<id> or …/videos/watch/<id>) or a YouTube link. {%- endcomment -%}
+{%- assign v = site.data.site.contact.video -%}
+{%- if v contains "youtube.com" or v contains "youtu.be" -%}
+  {%- assign yt = v | split: "v=" | last | split: "youtu.be/" | last | split: "&" | first -%}{%- assign vattr = "data-yt" -%}{%- assign vval = yt -%}
+{%- else -%}
+  {%- assign host = v | split: "/" | slice: 0, 3 | join: "/" -%}
+  {%- if v contains "/videos/watch/" -%}{%- assign pid = v | split: "/videos/watch/" | last -%}{%- else -%}{%- assign pid = v | split: "/w/" | last -%}{%- endif -%}
+  {%- assign pid = pid | split: "?" | first -%}{%- assign vattr = "data-pt" -%}
+  {%- capture vval %}{{ host }}/videos/embed/{{ pid }}?autoplay=1&muted=1&loop=1&title=0&warningTitle=0&peertubeLink=0&p2p=0{% endcapture -%}
+{%- endif %}
+<section class="video" {{ vattr }}="{{ vval }}" aria-label="{{ t.watch }}">
   <a class="video__fallback" href="{{ site.data.site.contact.video }}" rel="noopener">
     <img src="{{ site.data.site.images.video_cover | relative_url }}" alt="" loading="lazy">
     <span class="card__play" aria-hidden="true">▶</span>

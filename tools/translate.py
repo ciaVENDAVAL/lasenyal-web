@@ -19,7 +19,12 @@ from ruamel.yaml import YAML
 from ruamel.yaml.scalarstring import DoubleQuotedScalarString as DQ
 
 ROOT = Path(__file__).resolve().parent.parent
-LANGS = ["ca", "es", "en"]
+# ---- settings (change these to reuse the script on another site) ----
+LANGS = ["ca", "es", "en"]                 # the first one is the reference for which keys exist
+I18N = "_data/i18n/{lang}.yml"             # one texts file per language: .yml or .json
+PAGES = "_extra/{lang}"                    # folder of Markdown pages per language (None = no pages)
+SKIP = {"rhythms"}                         # keys never translated
+# ----------------------------------------------------------------------
 FACTS = YAML(typ="safe").load((ROOT / "tools/facts.yml").read_text())
 KEEP = sorted(FACTS.get("do_not_translate") or [], key=len, reverse=True)
 TERMS = FACTS.get("terms") or []
@@ -151,15 +156,17 @@ def put(x, path, value):
 
 def i18n(old_rev, dry):
     old, new, docs = {}, {}, {}
+    is_json = I18N.endswith(".json")
+    load = (lambda t: json.loads(t)) if is_json else (lambda t: YAML(typ="safe").load(t))
     for l in LANGS:
-        p = f"_data/i18n/{l}.yml"
+        p = I18N.format(lang=l)
         o = git_show(old_rev, p)
-        old[l] = YAML(typ="safe").load(o) if o else {}
-        docs[l] = yaml.load((ROOT / p).read_text())
-        new[l] = YAML(typ="safe").load((ROOT / p).read_text())
+        old[l] = load(o) if o else {}
+        docs[l] = json.loads((ROOT / p).read_text()) if is_json else yaml.load((ROOT / p).read_text())
+        new[l] = load((ROOT / p).read_text())
     jobs = {}   # (src) -> list of path
-    for path, _ in leaves(new["ca"]):
-        if path and path[0] == "rhythms" or (len(path) > 1 and path[1] == "rhythms"): continue
+    for path, _ in leaves(new[LANGS[0]]):
+        if any(k in SKIP for k in path): continue
         changed = [l for l in LANGS if get(new[l], path) != get(old[l], path)]
         if len(changed) == 1 and all(get(new[l], path) is not None for l in LANGS):
             jobs.setdefault(changed[0], []).append(path)
@@ -170,12 +177,16 @@ def i18n(old_rev, dry):
             if dst == src: continue
             out = texts if dry else translate(texts, src, dst)
             for p, t in zip(paths, out):
-                if not dry: put(docs[dst], p, DQ(t))
+                if not dry: put(docs[dst], p, t if is_json else DQ(t))
                 done.append(f"{'.'.join(map(str, p))}: {src.upper()} → {dst.upper()}")
     if not dry:
         for l in LANGS:
-            buf = StringIO(); yaml.dump(docs[l], buf)
-            (ROOT / f"_data/i18n/{l}.yml").write_text(buf.getvalue())
+            p = ROOT / I18N.format(lang=l)
+            if is_json:
+                txt = p.read_text(); ind = (re.search(r'\n( +|\t)"', txt) or [None, "  "])[1]
+                p.write_text(json.dumps(docs[l], ensure_ascii=False, indent=ind) + ("\n" if txt.endswith("\n") else ""))
+            else:
+                buf = StringIO(); yaml.dump(docs[l], buf); p.write_text(buf.getvalue())
     return done
 
 # ---------- simple pages ----------
@@ -190,11 +201,13 @@ def join_md(fm, body):
     return f"---\n{buf.getvalue()}---\n{body}"
 
 def pages(old_rev, dry):
-    names = {f.stem for l in LANGS for f in (ROOT / "_extra" / l).glob("*.md")}
+    if not PAGES: return []
+    folder = lambda l: PAGES.format(lang=l)
+    names = {f.stem for l in LANGS for f in (ROOT / folder(l)).glob("*.md")}
     done = []
     for n in sorted(names):
-        cur = {l: (ROOT / f"_extra/{l}/{n}.md").read_text() if (ROOT / f"_extra/{l}/{n}.md").exists() else None for l in LANGS}
-        before = {l: git_show(old_rev, f"_extra/{l}/{n}.md") for l in LANGS}
+        cur = {l: (ROOT / f"{folder(l)}/{n}.md").read_text() if (ROOT / f"{folder(l)}/{n}.md").exists() else None for l in LANGS}
+        before = {l: git_show(old_rev, f"{folder(l)}/{n}.md") for l in LANGS}
         changed = [l for l in LANGS if cur[l] is not None and cur[l] != before[l]]
         if len(changed) != 1: continue
         src = changed[0]
@@ -211,8 +224,8 @@ def pages(old_rev, dry):
                 if isinstance(fm.get(k), str) and fm[k].strip(): nfm[k] = out[i]; i += 1
             nbody = out[i] if body.strip() else ""
             if not dry:
-                (ROOT / f"_extra/{dst}").mkdir(parents=True, exist_ok=True)
-                (ROOT / f"_extra/{dst}/{n}.md").write_text(join_md(nfm, nbody))
+                (ROOT / folder(dst)).mkdir(parents=True, exist_ok=True)
+                (ROOT / f"{folder(dst)}/{n}.md").write_text(join_md(nfm, nbody))
             done.append(f"page {n}: {src.upper()} → {dst.upper()}")
     return done
 

@@ -79,6 +79,22 @@
     } else start();
   }
 
+  //    PeerTube: the same, as a plain embedded player (muted autoplay, loop).
+  const pt = document.querySelector(".video[data-pt]");
+  if (pt && !stopped()) {
+    const startPt = () => {
+      const f = document.createElement("iframe");
+      f.src = pt.dataset.pt; f.allow = "autoplay; fullscreen"; f.title = pt.getAttribute("aria-label") || "video";
+      f.setAttribute("sandbox", "allow-same-origin allow-scripts allow-popups allow-forms");
+      f.addEventListener("load", () => pt.classList.add("is-playing"));
+      pt.appendChild(f);
+    };
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); startPt(); } }, { rootMargin: "300px" });
+      io.observe(pt);
+    } else startPt();
+  }
+
   // 3. Accessibility panel (choices are remembered in this browser).
   const KEY = "ls-a11y", root = document.documentElement;
   const prefs = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
@@ -91,7 +107,7 @@
     if (!panel) return;
     panel.querySelectorAll("[data-a]").forEach(b => { if (TOGGLES.includes(b.dataset.a)) b.setAttribute("aria-pressed", String(!!prefs[b.dataset.a])); });
     panel.querySelector(".a11y-size__val").textContent = Math.round((prefs.size || 1) * 100) + "%";
-    if (prefs.motion && vid) { const f = vid.querySelector("iframe"); if (f) f.remove(); vid.classList.remove("is-playing"); }
+    for (const el of [vid, pt]) if (prefs.motion && el) { const f = el.querySelector("iframe"); if (f) f.remove(); el.classList.remove("is-playing"); }
   };
   if (aBtn && panel) {
     const setOpen = open => { aBtn.setAttribute("aria-expanded", String(open)); panel.hidden = !open; };
